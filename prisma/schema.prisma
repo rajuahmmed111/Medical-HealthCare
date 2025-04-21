@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -34,7 +33,7 @@ model User {
   password           String
   needPasswordChange Boolean  @default(false)
   role               UserRole @default(PATIENT)
-  status             String   @default("active")
+  status             String   @default("ACTIVE")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   admin              Admin?
