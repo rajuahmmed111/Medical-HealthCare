@@ -1,4 +1,4 @@
-const getUserByRole = async (role: string) => {
+const createAdmin = async (role: string) => {
     // Mock data for demonstration purposes
     const users = [
         { id: 1, name: 'John Doe', role: 'admin' },
@@ -11,6 +11,6 @@ const getUserByRole = async (role: string) => {
 }
 
 
-export const UserService = {
-    getUserByRole
+export const userService = {
+    createAdmin
 }

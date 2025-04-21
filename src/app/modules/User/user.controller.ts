@@ -1,14 +1,12 @@
 import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
-import { UserService } from "./user.service";
+import { userService } from "./user.service";
 import sendResponse from "../../../shared/sendResponse";
 import { Request, Response } from "express";
 
-// get by user role
-const getUserByRole = catchAsync(async (req: Request, res: Response) => {
-  const { role } = req.params;
-  console.log(role);
-  const result = await UserService.getUserByRole(role);
+// create admin
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+
 
   sendResponse(res, {
     success: true,
@@ -18,6 +16,6 @@ const getUserByRole = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const UserController = {
-  getUserByRole,
+export const userController = {
+    createAdmin,
 };
