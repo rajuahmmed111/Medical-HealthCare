@@ -18,7 +18,7 @@ const createAdmin = async (data: any) => {
       data: data.admin,
     });
 
-    return { user, admin };
+    return admin;
   });
 
   return result;
