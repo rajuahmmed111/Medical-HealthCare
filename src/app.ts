@@ -8,6 +8,10 @@ app.use(cors());
 // Setup API routes
 app.use("/api/v1", router);
 
+// parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello Developer!");
 });
