@@ -7,7 +7,6 @@ import { Request, Response } from "express";
 // create admin
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const result = await userService.createAdmin(req.body);
-  // console.log(result);
 
   sendResponse(res, {
     success: true,
