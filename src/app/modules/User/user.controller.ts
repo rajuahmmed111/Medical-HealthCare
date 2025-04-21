@@ -6,16 +6,16 @@ import { Request, Response } from "express";
 
 // create admin
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-
+  const result = await userService.createAdmin(req.body);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "get user by role successfully",
+    message: "Admin created successfully",
     data: result,
   });
 });
 
 export const userController = {
-    createAdmin,
+  createAdmin,
 };
