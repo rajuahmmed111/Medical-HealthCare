@@ -5,6 +5,7 @@ import { adminSearchableFields } from "./admin.constant";
 
 // search filter way : 1
 const getAdmins = async (params: any, options: any) => {
+  const { limit, page } = options;
   const { searchTerm, ...filterData } = params;
 
   const filters: Prisma.AdminWhereInput[] = [];
@@ -35,6 +36,8 @@ const getAdmins = async (params: any, options: any) => {
 
   const result = await prisma.admin.findMany({
     where,
+    skip: (Number(page) - 1) * limit,
+    take: Number(limit),
   });
   return result;
 };
