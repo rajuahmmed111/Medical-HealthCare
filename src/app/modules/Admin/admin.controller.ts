@@ -33,7 +33,7 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
 // gets a single admin by id
 const getAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.getAdminById(id);
+  const result = await adminService.getAdminByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
