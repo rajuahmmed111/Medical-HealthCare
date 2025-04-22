@@ -7,8 +7,8 @@ import { Request, Response } from "express";
 // get admins
 const getAdmins = catchAsync(async (req: Request, res: Response) => {
   try {
-    const { searchTerm } = req.query;
-    const result = await adminService.getAdmins(searchTerm);
+    // const { searchTerm } = req.query;
+    const result = await adminService.getAdmins(req.query);
 
     sendResponse(res, {
       statusCode: 200,
