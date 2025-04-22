@@ -89,7 +89,20 @@ const getAdminByIdFromDB = async (id: string) => {
   return result;
 };
 
+// update admin by id
+const updateAdminByIdIntoDB = async (id: string, data: any) => {
+  const result = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return result;
+};
+
 export const adminService = {
   getAdmins,
   getAdminByIdFromDB,
+  updateAdminByIdIntoDB,
 };

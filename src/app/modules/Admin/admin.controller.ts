@@ -30,7 +30,7 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-// gets a single admin by id
+// gets admin by id
 const getAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await adminService.getAdminByIdFromDB(id);
@@ -43,7 +43,21 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// update  admin by id
+const updateAdminById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await adminService.updateAdminByIdIntoDB(id, req.body);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin updated successfully",
+    data: result,
+  });
+});
+
 export const adminController = {
   getAdmins,
   getAdminById,
+  updateAdminById,
 };
