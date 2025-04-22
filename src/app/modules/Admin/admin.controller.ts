@@ -4,14 +4,14 @@ import sendResponse from "../../../shared/sendResponse";
 import { adminService } from "./admin.service";
 import { Request, Response } from "express";
 import { pick } from "../../../shared/pick";
-import { filterField } from "./admin.constant";
+import { filterField, paginationField } from "./admin.constant";
 
 // get admins
 const getAdmins = catchAsync(async (req: Request, res: Response) => {
   try {
     const filter = pick(req.query, filterField);
-    const options = pick(req.query, ["limit", "page"]);
-  // console.log(options, "options");
+    const options = pick(req.query, paginationField);
+
     const result = await adminService.getAdmins(filter, options);
 
     sendResponse(res, {
