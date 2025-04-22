@@ -45,15 +45,25 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
 
 // update  admin by id
 const updateAdminById = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await adminService.updateAdminByIdIntoDB(id, req.body);
+  try {
+    const { id } = req.params;
+    const data = req.body;
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Admin updated successfully",
-    data: result,
-  });
+    const result = await adminService.updateAdminByIdIntoDB(id, data);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Admin updated successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: err?.message || "Failed to create admin",
+      error: err?.name,
+    });
+  }
 });
 
 export const adminController = {

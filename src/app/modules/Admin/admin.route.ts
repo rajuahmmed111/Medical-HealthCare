@@ -9,6 +9,6 @@ router.get("/", adminController.getAdmins);
 router.get("/:id", adminController.getAdminById);
 
 // update  admin by id
-router.patch("/:id", adminController.getAdminById);
+router.patch("/:id", adminController.updateAdminById);
 
 export const adminRoute = router;
