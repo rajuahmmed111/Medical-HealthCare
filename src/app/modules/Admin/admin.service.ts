@@ -35,6 +35,10 @@ const getAdmins = async (params: any, options: any) => {
     });
   }
 
+  filters.push({
+    isDeleted: false,
+  });
+
   const where: Prisma.AdminWhereInput = { AND: filters };
 
   const result = await prisma.admin.findMany({
@@ -165,7 +169,7 @@ const softDeleteAdminByIdFromDB = async (id: string) => {
     return sanitizedData;
   });
 
-  return result;
+  // return result;
 };
 
 export const adminService = {
