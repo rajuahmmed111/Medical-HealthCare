@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import { searchFilter } from "../../../shared/searchFilter";
+import { searchFilter } from "../../../Helpers/searchFilter";
 import { adminSearchableFields } from "./admin.constant";
-import { calculatedPagination } from "../../../Utils/calculatePagination";
+import { calculatedPagination } from "../../../Helpers/calculatePagination";
 
 // search filter way : 1
 const getAdmins = async (params: any, options: any) => {
