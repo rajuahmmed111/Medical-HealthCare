@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import catchAsync from "../../../shared/catchAsync";
+import catchAsync from "../../../Utils/catchAsync";
 import { userService } from "./user.service";
-import sendResponse from "../../../shared/sendResponse";
+import sendResponse from "../../../Utils/sendResponse";
 import { Request, Response } from "express";
 
 // create admin

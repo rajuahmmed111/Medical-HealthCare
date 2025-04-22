@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
-import catchAsync from "../../../shared/catchAsync";
-import sendResponse from "../../../shared/sendResponse";
+import catchAsync from "../../../Utils/catchAsync";
+import sendResponse from "../../../Utils/sendResponse";
 import { adminService } from "./admin.service";
 import { Request, Response } from "express";
 import { pick } from "../../../shared/pick";
