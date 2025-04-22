@@ -14,4 +14,7 @@ router.patch("/:id", adminController.updateAdminById);
 // delete admin by id
 router.delete("/:id", adminController.deleteAdminById);
 
+// soft delete admin by id
+router.patch("/soft/:id", adminController.softDeleteAdminById);
+
 export const adminRoute = router;

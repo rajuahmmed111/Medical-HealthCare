@@ -1,4 +1,4 @@
-import { Admin, Prisma } from "@prisma/client";
+import { Admin, Prisma, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { searchFilter } from "../../../Helpers/searchFilter";
 import { adminSearchableFields } from "./admin.constant";
@@ -118,7 +118,7 @@ const deleteAdminByIdFromDB = async (id: string) => {
   }
 
   const result = await prisma.$transaction(async (tx) => {
-    const deletedAdmin = await tx.admin.findUnique({ where: { id } });
+    const deletedAdmin = await tx.admin.delete({ where: { id } });
     if (!deletedAdmin) {
       throw new Error("Admin not found");
     }
@@ -132,9 +132,46 @@ const deleteAdminByIdFromDB = async (id: string) => {
   return result;
 };
 
+// soft delete admin by id
+const softDeleteAdminByIdFromDB = async (id: string) => {
+  const existingAdmin = await prisma.admin.findUnique({
+    where: { id },
+  });
+  if (!existingAdmin) {
+    throw new Error("Admin not found");
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    const deletedAdmin = await tx.admin.findUnique({ where: { id } });
+    if (!deletedAdmin) {
+      throw new Error("Admin not found");
+    }
+
+    const updateAdmin = await tx.admin.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    const updateStatusUser = await tx.user.update({
+      where: { email: updateAdmin?.email },
+      data: {
+        status: UserStatus.DELETED,
+      },
+    });
+
+    const { password, ...sanitizedData } = updateStatusUser;
+    return sanitizedData;
+  });
+
+  return result;
+};
+
 export const adminService = {
   getAdmins,
   getAdminByIdFromDB,
   updateAdminByIdIntoDB,
   deleteAdminByIdFromDB,
+  softDeleteAdminByIdFromDB,
 };

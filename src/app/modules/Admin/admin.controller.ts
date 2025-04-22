@@ -87,9 +87,32 @@ const deleteAdminById = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+// soft delete admin by id
+const softDeleteAdminById = catchAsync(
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const result = await adminService.softDeleteAdminByIdFromDB(id);
+
+      sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Admin soft deleted successfully",
+        data: result,
+      });
+    } catch (err) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: err?.message || "Failed to create admin",
+        error: err?.name,
+      });
+    }
+  });
+
 export const adminController = {
   getAdmins,
   getAdminById,
   updateAdminById,
   deleteAdminById,
+  softDeleteAdminById,
 };
