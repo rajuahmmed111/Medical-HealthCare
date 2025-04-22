@@ -87,6 +87,7 @@ const getAdminByIdFromDB = async (id: string) => {
   const result = await prisma.admin.findUnique({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
