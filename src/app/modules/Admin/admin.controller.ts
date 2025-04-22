@@ -66,8 +66,30 @@ const updateAdminById = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+// delete admin by id
+const deleteAdminById = catchAsync(async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await adminService.deleteAdminByIdFromDB(id);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Admin deleted successfully",
+      data: result,
+    });
+  } catch (err) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: err?.message || "Failed to create admin",
+      error: err?.name,
+    });
+  }
+});
+
 export const adminController = {
   getAdmins,
   getAdminById,
   updateAdminById,
+  deleteAdminById,
 };
