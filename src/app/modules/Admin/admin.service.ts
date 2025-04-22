@@ -38,6 +38,9 @@ const getAdmins = async (params: any, options: any) => {
     where,
     skip: (Number(page) - 1) * limit,
     take: Number(limit),
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return result;
 };
