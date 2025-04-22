@@ -106,6 +106,7 @@ const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
   const result = await prisma.admin.update({
     where: {
       id,
+      isDeleted: false,
     },
     data,
   });
@@ -116,7 +117,7 @@ const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
 // delete admin by id
 const deleteAdminByIdFromDB = async (id: string) => {
   const existingAdmin = await prisma.admin.findUnique({
-    where: { id },
+    where: { id, isDeleted: false },
   });
   if (!existingAdmin) {
     throw new Error("Admin not found");
@@ -140,7 +141,7 @@ const deleteAdminByIdFromDB = async (id: string) => {
 // soft delete admin by id
 const softDeleteAdminByIdFromDB = async (id: string) => {
   const existingAdmin = await prisma.admin.findUnique({
-    where: { id },
+    where: { id, isDeleted: false },
   });
   if (!existingAdmin) {
     throw new Error("Admin not found");
