@@ -30,6 +30,20 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
+// gets a single admin by id
+const getAdminById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await adminService.getAdminById(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin retrieved successfully",
+    data: result,
+  });
+});
+
 export const adminController = {
   getAdmins,
+  getAdminById,
 };
