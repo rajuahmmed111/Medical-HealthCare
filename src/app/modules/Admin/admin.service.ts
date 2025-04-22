@@ -91,6 +91,13 @@ const getAdminByIdFromDB = async (id: string) => {
 
 // update admin by id
 const updateAdminByIdIntoDB = async (id: string, data: Partial<Admin>) => {
+  const existingAdmin = await prisma.admin.findUnique({
+    where: { id },
+  });
+  if (!existingAdmin) {
+    throw new Error("Admin not found");
+  }
+
   const result = await prisma.admin.update({
     where: {
       id,
