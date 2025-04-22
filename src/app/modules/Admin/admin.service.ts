@@ -1,13 +1,13 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { searchFilter } from "../../../shared/searchFilter";
+import { adminSearchableFields } from "./admin.constant";
 
 // search filter way : 1
-const getAdmins = async (params: any) => {
+const getAdmins = async (params: any, options: any) => {
   const { searchTerm, ...filterData } = params;
 
   const filters: Prisma.AdminWhereInput[] = [];
-  const adminSearchableFields = ["name", "email"];
 
   if (params?.searchTerm) {
     filters.push({
