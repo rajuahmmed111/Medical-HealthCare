@@ -11,8 +11,8 @@ const loginUser = catchAsync(async (req, res) => {
   const { refreshToken } = result;
 
   res.cookie("refreshToken", refreshToken, {
-    secure: false,
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
   });
 
   sendResponse(res, {
