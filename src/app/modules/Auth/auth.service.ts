@@ -2,14 +2,16 @@ import httpStatus from "http-status";
 import ApiError from "../../../Error/apiError";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { jwtHelpers } from "../../../Helpers/generateToken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { jwtHelpers } from "../../../Helpers/jwtHelpers";
+import { UserStatus } from "@prisma/client";
 
 // login user
 const loginUser = async (email: string, password: string) => {
   const userData = await prisma.user.findUnique({
     where: {
       email,
+      status: UserStatus.ACTIVE,
     },
   });
   if (!userData) {
@@ -53,25 +55,29 @@ const refreshToken = async (token: string) => {
   let decodedData;
 
   try {
-    decodedData = jwt.verify(token, "abcdefghijklmnop");
+    decodedData = jwtHelpers.verifyToken(
+      token,
+      "abcdefghijklmnop"
+    ) as JwtPayload;
   } catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid refresh token");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Your not authorized");
   }
 
   const isUserExist = await prisma.user.findUnique({
     where: {
       email: decodedData?.email,
+      status: UserStatus.ACTIVE,
     },
   });
   if (!isUserExist) {
-      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
-    const newAccessToken = jwtHelpers.generateToken(
-        { id: isUserExist.id, email: isUserExist.email, role: isUserExist.role },
-        "abcdefg",
-        "5m"
-    );
+  const newAccessToken = jwtHelpers.generateToken(
+    { id: isUserExist.id, email: isUserExist.email, role: isUserExist.role },
+    "abcdefg",
+    "5m"
+  );
 
   return {
     accessToken: newAccessToken,
