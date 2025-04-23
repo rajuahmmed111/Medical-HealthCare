@@ -3,7 +3,6 @@ import express, { Application, Request, Response } from "express";
 const app: Application = express();
 import cors from "cors";
 import router from "./app/Routes";
-import ApiNotFound from "./app/Middleware/apiNotFound";
 import GlobalErrorHandler from "./app/Middleware/globalErrorHandler";
 
 app.use(cors());
