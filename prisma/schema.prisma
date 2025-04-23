@@ -32,7 +32,7 @@ model User {
   id                 String   @id @default(uuid())
   email              String   @unique
   password           String
-  needPasswordChange Boolean  @default(false)
+  needPasswordChange Boolean  @default(true)
   role               UserRole @default(PATIENT)
   status             String   @default("ACTIVE")
   createdAt          DateTime @default(now())
