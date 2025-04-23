@@ -26,7 +26,7 @@ const loginUser = async (email: string, password: string) => {
   const accessToken = jwt.sign(
     { id: userData.id, email: userData.email, role: userData.role },
     "abcdefg",
-    { algorithm: "HS256", expiresIn: "1h" }
+    { algorithm: "HS256", expiresIn: "5m" }
   );
   if (!accessToken) {
     throw new ApiError(
@@ -35,11 +35,17 @@ const loginUser = async (email: string, password: string) => {
     );
   }
 
-  
-    return {
-        accessToken,
-        needPasswordChange: userData.needPasswordChange,
-    }
+  const refreshToken = jwt.sign(
+    { id: userData.id, email: userData.email, role: userData.role },
+    "abcdefg",
+    { algorithm: "HS256", expiresIn: "1h" }
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    needPasswordChange: userData.needPasswordChange,
+  };
 };
 
 export const AuthService = {
