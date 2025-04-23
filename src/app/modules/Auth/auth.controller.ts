@@ -20,12 +20,35 @@ const loginUser = catchAsync(async (req, res) => {
     success: true,
     message: "Login successful",
     data: {
-        accessToken: result.accessToken,
-        needPasswordChange: result.needPasswordChange,
+      accessToken: result.accessToken,
+      needPasswordChange: result.needPasswordChange,
     },
+  });
+});
+
+// refresh token
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return sendResponse(res, {
+      statusCode: 403,
+      success: false,
+      message: "Refresh token not found",
+    });
+  }
+
+  const result = await AuthService.refreshToken(refreshToken);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User logged In successfully",
+    data: result
   });
 });
 
 export const AuthController = {
   loginUser,
+  refreshToken,
 };

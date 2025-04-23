@@ -4,8 +4,10 @@ const app: Application = express();
 import cors from "cors";
 import router from "./app/Routes";
 import GlobalErrorHandler from "./app/Middleware/globalErrorHandler";
+import cookieParser from "cookie-parser";
 
 app.use(cors());
+app.use(cookieParser());
 
 // parser
 app.use(express.json());

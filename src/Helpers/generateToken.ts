@@ -6,7 +6,7 @@ type TokenPayload = {
   role: string;
 };
 
-export const generateToken = (
+const generateToken = (
   payload: TokenPayload,
   secret: Secret,
   expiresIn: string
@@ -18,3 +18,8 @@ export const generateToken = (
 
   return token;
 };
+
+
+export const jwtHelpers = {
+    generateToken,
+}
