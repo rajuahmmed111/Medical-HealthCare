@@ -1,5 +1,7 @@
 import express from "express";
 import { adminController } from "./admin.controller";
+import validateRequest from "../../Middleware/validateRequest";
+import { AdminValidation } from "./zod.validate";
 const router = express.Router();
 
 // get all admins
@@ -9,7 +11,11 @@ router.get("/", adminController.getAdmins);
 router.get("/:id", adminController.getAdminById);
 
 // update  admin by id
-router.patch("/:id", adminController.updateAdminById);
+router.patch(
+  "/:id",
+  validateRequest(AdminValidation.updateAdmin),
+  adminController.updateAdminById
+);
 
 // delete admin by id
 router.delete("/:id", adminController.deleteAdminById);
