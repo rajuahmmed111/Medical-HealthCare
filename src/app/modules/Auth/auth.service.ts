@@ -59,6 +59,7 @@ const refreshToken = async (token: string) => {
       token,
       "abcdefghijklmnop"
     ) as JwtPayload;
+    console.log(decodedData);
   } catch (err) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Your not authorized");
   }
