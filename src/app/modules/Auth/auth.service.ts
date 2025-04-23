@@ -3,6 +3,7 @@ import ApiError from "../../../Error/apiError";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { generateToken } from "../../../Helpers/generateToken";
 
 // login user
 const loginUser = async (email: string, password: string) => {
@@ -23,10 +24,10 @@ const loginUser = async (email: string, password: string) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Password is incorrect");
   }
 
-  const accessToken = jwt.sign(
+  const accessToken = generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
     "abcdefg",
-    { algorithm: "HS256", expiresIn: "5m" }
+    "5m"
   );
   if (!accessToken) {
     throw new ApiError(
@@ -35,10 +36,10 @@ const loginUser = async (email: string, password: string) => {
     );
   }
 
-  const refreshToken = jwt.sign(
+  const refreshToken = generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
-    "abcdefg",
-    { algorithm: "HS256", expiresIn: "1h" }
+    "abcdefghijklmnop",
+    "5m"
   );
 
   return {
