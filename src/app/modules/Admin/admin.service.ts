@@ -3,9 +3,12 @@ import prisma from "../../../shared/prisma";
 import { searchFilter } from "../../../Helpers/searchFilter";
 import { adminSearchableFields } from "./admin.constant";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
+import { IAdminFilterRequest, IPaginationOptions } from "./admin.interface";
 
 // search filter way : 1
-const getAdmins = async (params: any, options: any) => {
+const getAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
+console.log("params", options);
+
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
@@ -29,7 +32,7 @@ const getAdmins = async (params: any, options: any) => {
     filters.push({
       AND: Object.keys(filterData).map((key) => ({
         [key]: {
-          equals: filterData[key],
+          equals: (filterData as any)[key],
         },
       })),
     });
