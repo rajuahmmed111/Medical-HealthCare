@@ -2,9 +2,10 @@ import httpStatus from "http-status";
 import ApiError from "../../../Error/apiError";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import { jwtHelpers } from "../../../Helpers/jwtHelpers";
 import { UserStatus } from "@prisma/client";
+import config from "../../config";
 
 // login user
 const loginUser = async (email: string, password: string) => {
@@ -28,8 +29,8 @@ const loginUser = async (email: string, password: string) => {
 
   const accessToken = jwtHelpers.generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
-    "abcdefg",
-    "5m"
+    config.jwt.jwt_secret as string,
+    config.jwt.expires_in as string
   );
   if (!accessToken) {
     throw new ApiError(
@@ -40,8 +41,8 @@ const loginUser = async (email: string, password: string) => {
 
   const refreshToken = jwtHelpers.generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
-    "abcdefghijklmnop",
-    "5m"
+    config.jwt.refresh_token_secret as string,
+    config.jwt.refresh_token_expires_in as string
   );
 
   return {
@@ -57,7 +58,7 @@ const refreshToken = async (token: string) => {
   try {
     decodedData = jwtHelpers.verifyToken(
       token,
-      "abcdefghijklmnop"
+      config.jwt.refresh_token_secret as string
     ) as JwtPayload;
     console.log(decodedData);
   } catch (err) {
@@ -76,8 +77,8 @@ const refreshToken = async (token: string) => {
 
   const newAccessToken = jwtHelpers.generateToken(
     { id: isUserExist.id, email: isUserExist.email, role: isUserExist.role },
-    "abcdefg",
-    "5m"
+    config.jwt.jwt_secret as string,
+    config.jwt.expires_in as string
   );
 
   return {

@@ -25,7 +25,7 @@ app.use(GlobalErrorHandler);
 
 // Handle 404 errors
 app.use((req: Request, res: Response) => {
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+  res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: "API NOT FOUND!",
     error: {

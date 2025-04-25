@@ -8,11 +8,6 @@ type TokenPayload = {
   role: string;
 };
 
-// type VerifyToken = {
-//   token: string;
-//   secret: string;
-// };
-
 const generateToken = (
   payload: TokenPayload,
   secret: Secret,
