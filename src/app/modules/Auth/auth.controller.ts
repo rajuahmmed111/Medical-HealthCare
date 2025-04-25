@@ -44,16 +44,20 @@ const refreshToken = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: "User logged In successfully",
-    data: result
+    data: result,
   });
 });
 
 // change password
 const changePassword = catchAsync(async (req, res) => {
-  const { newPassword } = req.body;
   const userId = req.user?.id;
+  const { oldPassword, newPassword } = req.body;
 
-  const result = await AuthService.changePassword(userId, newPassword);
+  const result = await AuthService.changePassword(
+    userId,
+    oldPassword,
+    newPassword
+  );
 
   sendResponse(res, {
     statusCode: 200,

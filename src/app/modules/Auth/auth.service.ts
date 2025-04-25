@@ -88,13 +88,43 @@ const refreshToken = async (token: string) => {
 };
 
 // change password
-const changePassword = async (userId: string, newPassword: string) => {
-  const hashedPassword = await bcrypt.hash(newPassword, 12);
-  const user = await prisma.user.update({
-    where: { id: userId },
-    data: { password: hashedPassword },
+const changePassword = async (
+  userId: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
   });
-  return user;
+  if (!userData) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+  const isPasswordMatch: boolean = await bcrypt.compare(
+    oldPassword,
+    userData.password
+  );
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Password is incorrect");
+  }
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: hashedPassword,
+      needPasswordChange: false,
+    },
+  });
+
+  return {
+    message: "Password changed successfully",
+  };
 };
 
 export const AuthService = {

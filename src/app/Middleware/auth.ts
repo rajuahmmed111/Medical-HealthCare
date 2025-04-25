@@ -17,12 +17,16 @@ const auth = (...roles: string[]) => {
         config.jwt.jwt_secret as string
       );
 
+      req.user = verifiedUser;
+
       if (roles.length && !roles.includes(verifiedUser.role)) {
         throw new ApiError(
           httpStatus.FORBIDDEN,
           "Forbidden! You are not authorized!"
         );
       }
+
+      next();
     } catch (err) {
       next(err);
     }
