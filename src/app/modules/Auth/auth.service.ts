@@ -87,7 +87,18 @@ const refreshToken = async (token: string) => {
   };
 };
 
+// change password
+const changePassword = async (userId: string, newPassword: string) => {
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
+  });
+  return user;
+};
+
 export const AuthService = {
   loginUser,
   refreshToken,
+  changePassword,
 };
