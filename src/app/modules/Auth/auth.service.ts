@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import ApiError from "../../../Error/apiError";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from "bcrypt";
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
 import { jwtHelpers } from "../../../Helpers/jwtHelpers";
 import { UserStatus } from "@prisma/client";
 import config from "../../config";
@@ -29,7 +29,7 @@ const loginUser = async (email: string, password: string) => {
 
   const accessToken = jwtHelpers.generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
-    config.jwt.jwt_secret as string,
+    config.jwt.jwt_secret as Secret,
     config.jwt.expires_in as string
   );
   if (!accessToken) {
@@ -41,7 +41,7 @@ const loginUser = async (email: string, password: string) => {
 
   const refreshToken = jwtHelpers.generateToken(
     { id: userData.id, email: userData.email, role: userData.role },
-    config.jwt.refresh_token_secret as string,
+    config.jwt.refresh_token_secret as Secret,
     config.jwt.refresh_token_expires_in as string
   );
 
@@ -77,7 +77,7 @@ const refreshToken = async (token: string) => {
 
   const newAccessToken = jwtHelpers.generateToken(
     { id: isUserExist.id, email: isUserExist.email, role: isUserExist.role },
-    config.jwt.jwt_secret as string,
+    config.jwt.jwt_secret as Secret,
     config.jwt.expires_in as string
   );
 
