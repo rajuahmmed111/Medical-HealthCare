@@ -96,6 +96,7 @@ const changePassword = async (
   const userData = await prisma.user.findUnique({
     where: {
       id: userId,
+      status: UserStatus.ACTIVE,
     },
   });
   if (!userData) {
