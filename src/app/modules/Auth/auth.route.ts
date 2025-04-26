@@ -18,4 +18,16 @@ router.post(
   AuthController.changePassword
 );
 
+// forgot password
+router.post(
+  "/forgot-password",
+  AuthController.forgotPassword
+);
+
+// reset password
+router.post(
+  "/reset-password/:token",
+  AuthController.resetPassword
+);
+
 export const authRoute = router;

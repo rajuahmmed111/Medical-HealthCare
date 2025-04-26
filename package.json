@@ -24,6 +24,7 @@
     "@prisma/client": "^6.6.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/nodemailer": "^6.4.17",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
