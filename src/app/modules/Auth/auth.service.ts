@@ -222,6 +222,7 @@ const resetPassword = async (token: string, newPassword: string) => {
   // password validation
   const hashedPassword = await bcrypt.hash(newPassword, 12);
 
+  // update user
   await prisma.user.update({
     where: {
       id: userData.id,
