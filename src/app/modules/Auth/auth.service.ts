@@ -219,6 +219,7 @@ const resetPassword = async (token: string, newPassword: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
+  // password validation
   const hashedPassword = await bcrypt.hash(newPassword, 12);
 
   await prisma.user.update({
