@@ -6,9 +6,10 @@ import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { IAdminFilterRequest, IPaginationOptions } from "./admin.interface";
 
 // search filter way : 1
-const getAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
-console.log("params", options);
-
+const getAdmins = async (
+  params: IAdminFilterRequest,
+  options: IPaginationOptions
+) => {
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
