@@ -196,21 +196,13 @@ const forgotPassword = async (email: string) => {
 };
 
 // reset password
-const resetPassword = async (token: string, newPassword: string) => {
-  let decodedData;
-
-  try {
-    decodedData = jwtHelpers.verifyToken(
-      token,
-      config.jwt.rest_password_secret as string
-    ) as JwtPayload;
-  } catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Your not authorized");
-  }
-
+const resetPassword = async (
+  token: string,
+  payload: { id: string; password: string }
+) => {
   const userData = await prisma.user.findUnique({
     where: {
-      id: decodedData?.id,
+      id: payload.id,
       status: UserStatus.ACTIVE,
     },
   });
@@ -218,17 +210,25 @@ const resetPassword = async (token: string, newPassword: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  // password validation
-  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  const isValidToken = jwtHelpers.verifyToken(
+    token,
+    config.jwt.rest_password_secret as string
+  );
+  if (!isValidToken) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Forbidden");
+  }
+
+  // hashed password
+  const hashedPassword = await bcrypt.hash(payload.password, 12);
 
   // update user
   await prisma.user.update({
     where: {
-      id: userData.id,
+      id: payload.id,
     },
     data: {
       password: hashedPassword,
-      needPasswordChange: false,
+      // needPasswordChange: false
     },
   });
 
