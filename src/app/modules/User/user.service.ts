@@ -2,9 +2,10 @@ import { UserRole } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { uploadFile } from "../../../Helpers/fileUpload";
+import { IUploadedFile } from "../../../Interface/file";
 
 const createAdmin = async (req: any) => {
-  const file = req.file;
+  const file: IUploadedFile = req.file;
 
   if (file) {
     const uploadToCloudinary = await uploadFile.uploadToCloudinary(file);
@@ -21,7 +22,7 @@ const createAdmin = async (req: any) => {
 
   // use transaction to create user and admin data
   const result = await prisma.$transaction(async (tx) => {
-    const user = await tx.user.create({
+    await tx.user.create({
       data: userData,
     });
 
