@@ -40,8 +40,21 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all users
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getAllUsers();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Users retrieved successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   createAdmin,
   createDoctor,
-  createPatient
+  createPatient,
+  getAllUsers,
 };

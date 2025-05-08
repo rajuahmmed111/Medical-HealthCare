@@ -38,4 +38,11 @@ router.post(
   userController.createPatient
 );
 
+// get all users
+router.get(
+  "/",
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getAllUsers
+);
+
 export const userRoute = router;
