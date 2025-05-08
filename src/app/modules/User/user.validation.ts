@@ -1,3 +1,4 @@
+import { Gender } from "@prisma/client";
 import { z } from "zod";
 
 const createAdmin = z.object({
@@ -17,6 +18,42 @@ const createAdmin = z.object({
   }),
 });
 
+const createDoctor = z.object({
+  password: z.string({
+    required_error: "Password is required",
+  }),
+  doctor: z.object({
+    name: z.string({ required_error: "Name is required" }),
+    email: z
+      .string({ required_error: "Email is required" })
+      .email("Invalid email format"),
+    profilePhoto: z
+      .string()
+      .url("Invalid profile photo URL")
+      .optional()
+      .nullable(),
+    contactNumber: z.string({ required_error: "Contact number is required" }),
+    address: z.string().optional().nullable(),
+    registrationNumber: z.string({
+      required_error: "Registration number is required",
+    }),
+    experience: z.number().int().min(0).default(0),
+    gender: z.enum([Gender.FEMALE, Gender.MALE, Gender.OTHER]).default(
+      Gender.MALE),
+    appointmentFee: z
+      .number({ required_error: "Appointment fee is required" })
+      .int()
+      .min(0),
+    qualification: z.string({ required_error: "Qualification is required" }),
+    currentWorkingPlace: z.string({
+      required_error: "Current working place is required",
+    }),
+    designation: z.string({ required_error: "Designation is required" }),
+    averageRating: z.number().min(0).max(5).default(0),
+  }),
+});
+
 export const UserValidation = {
   createAdmin,
+  createDoctor,
 };

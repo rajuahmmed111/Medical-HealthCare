@@ -27,6 +27,7 @@ enum UserStatus {
 enum Gender {
   MALE
   FEMALE
+  OTHER
 }
 
 // ------------------------------
@@ -76,11 +77,11 @@ model Doctor {
   registrationNumber  String
   experience          Int      @default(0)
   gender              Gender   @default(MALE)
-  appointmentFee      Int
+  appointmentFee      Int      @default(0)
   qualification       String
   currentWorkingPlace String
   designation         String
-  averageRating       Float
+  averageRating       Float    @default(0)
   isDeleted           Boolean  @default(false)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt

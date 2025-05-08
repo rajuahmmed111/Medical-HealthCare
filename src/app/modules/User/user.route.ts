@@ -11,7 +11,7 @@ const router = express.Router();
 
 // create admin
 router.post(
-  "/",
+  "/create-admin",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   uploadFile.profileImage,
   parseBodyData, // must come before validation
@@ -19,5 +19,14 @@ router.post(
   userController.createAdmin
 );
 
+// create doctor
+router.post(
+  "/create-doctor",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadFile.profileImage,
+  parseBodyData, // must come before validation
+  validateRequest(UserValidation.createDoctor),
+  userController.createDoctor
+);
 
 export const userRoute = router;

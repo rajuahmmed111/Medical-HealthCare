@@ -4,6 +4,7 @@ import prisma from "../../../shared/prisma";
 import { uploadFile } from "../../../Helpers/fileUpload";
 import { IUploadedFile } from "../../../Interface/file";
 
+// create admin
 const createAdmin = async (req: any) => {
   const file: IUploadedFile = req.file;
 
@@ -36,6 +37,40 @@ const createAdmin = async (req: any) => {
   return result;
 };
 
+// create doctor
+const createDoctor = async (req: any) => {
+  const file: IUploadedFile = req.file;
+
+  if (file) {
+    const uploadToCloudinary = await uploadFile.uploadToCloudinary(file);
+    req.body.doctor.profilePhoto = uploadToCloudinary?.secure_url;
+  }
+
+  const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
+
+  const userData = {
+    email: req.body.doctor.email,
+    password: hashedPassword,
+    role: UserRole.DOCTOR,
+  };
+
+  // use transaction to create user and admin data
+  const result = await prisma.$transaction(async (tx) => {
+    await tx.user.create({
+      data: userData,
+    });
+
+    const doctor = await tx.admin.create({
+      data: req.body.admin,
+    });
+
+    return doctor;
+  });
+
+  return result;
+};
+
 export const userService = {
   createAdmin,
+  createDoctor,
 };
