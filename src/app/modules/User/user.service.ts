@@ -60,8 +60,8 @@ const createDoctor = async (req: any) => {
       data: userData,
     });
 
-    const doctor = await tx.admin.create({
-      data: req.body.admin,
+    const doctor = await tx.doctor.create({
+      data: req.body.doctor,
     });
 
     return doctor;

@@ -27,19 +27,16 @@ const createDoctor = z.object({
     email: z
       .string({ required_error: "Email is required" })
       .email("Invalid email format"),
-    profilePhoto: z
-      .string()
-      .url("Invalid profile photo URL")
-      .optional()
-      .nullable(),
+    // profilePhoto: z.string().optional(),
     contactNumber: z.string({ required_error: "Contact number is required" }),
-    address: z.string().optional().nullable(),
+    address: z.string().optional(),
     registrationNumber: z.string({
       required_error: "Registration number is required",
     }),
     experience: z.number().int().min(0).default(0),
-    gender: z.enum([Gender.FEMALE, Gender.MALE, Gender.OTHER]).default(
-      Gender.MALE),
+    gender: z
+      .enum([Gender.FEMALE, Gender.MALE, Gender.OTHER])
+      .default(Gender.MALE),
     appointmentFee: z
       .number({ required_error: "Appointment fee is required" })
       .int()
