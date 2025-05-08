@@ -29,4 +29,14 @@ router.post(
   userController.createDoctor
 );
 
+// create patient
+router.post(
+  "/create-patient",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  uploadFile.profileImage,
+  parseBodyData, // must come before validation
+  validateRequest(UserValidation.createPatient),
+  userController.createPatient
+);
+
 export const userRoute = router;
