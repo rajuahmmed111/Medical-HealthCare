@@ -212,6 +212,15 @@ const updateProfileStatus = async (id: string, status: UserStatus) => {
 const getMyProfile = async (id: string) => {
   const userInfo = await prisma.user.findUnique({
     where: { id },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   if (!userInfo) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
