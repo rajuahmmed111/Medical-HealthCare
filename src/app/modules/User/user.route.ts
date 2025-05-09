@@ -49,7 +49,15 @@ router.post(
 router.patch(
   "/:id/status",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(UserValidation.updateProfileStatus),
   userController.updateProfileStatus
+);
+
+// get my profile
+router.get(
+  "/me",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  userController.getMyProfile
 );
 
 export const userRoute = router;

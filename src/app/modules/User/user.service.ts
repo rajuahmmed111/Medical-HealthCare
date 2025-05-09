@@ -191,7 +191,7 @@ const getAllUsersFromDB = async (
 };
 
 // update profile status
-const updateProfileStatus = async (id: string, status: UserRole) => {
+const updateProfileStatus = async (id: string, status: UserStatus) => {
   const existingUser = await prisma.user.findUnique({
     where: { id },
   });
@@ -208,10 +208,42 @@ const updateProfileStatus = async (id: string, status: UserRole) => {
   return updatedUser;
 };
 
+// get my profile
+const getMyProfile = async (id: string) => {
+  const userInfo = await prisma.user.findUnique({
+    where: { id },
+  });
+  if (!userInfo) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  let profileInfo: any;
+  if (userInfo.role === UserRole.SUPER_ADMIN) {
+    profileInfo = await prisma.admin.findUnique({
+      where: { id },
+    });
+  } else if (userInfo.role === UserRole.ADMIN) {
+    profileInfo = await prisma.admin.findUnique({
+      where: { id },
+    });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.findUnique({
+      where: { id },
+    });
+  } else if (userInfo.role === UserRole.PATIENT) {
+    profileInfo = await prisma.patient.findUnique({
+      where: { id },
+    });
+  }
+
+  return {...userInfo, ...profileInfo};
+};
+
 export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
   getAllUsersFromDB,
   updateProfileStatus,
+  getMyProfile,
 };
