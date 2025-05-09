@@ -41,7 +41,7 @@ router.post(
 // get all users
 router.get(
   "/",
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   userController.getAllUsers
 );
 

@@ -3,6 +3,8 @@ import catchAsync from "../../../Utils/catchAsync";
 import { userService } from "./user.service";
 import sendResponse from "../../../Utils/sendResponse";
 import { Request, Response } from "express";
+import { pick } from "../../../shared/pick";
+import { filterField, paginationField } from "./user.constant";
 
 // create admin
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
@@ -42,7 +44,9 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 
 // get all users
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.getAllUsers();
+  const filter = pick(req.query, filterField);
+  const options = pick(req.query, paginationField);
+  const result = await userService.getAllUsers(filter, options);
 
   sendResponse(res, {
     success: true,

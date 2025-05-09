@@ -1,9 +1,11 @@
-import { Admin, Doctor, Patient, UserRole } from "@prisma/client";
+import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { uploadFile } from "../../../Helpers/fileUpload";
 import { IUploadedFile } from "../../../Interface/file";
 import { Request } from "express";
+import { calculatedPagination } from "../../../Helpers/calculatePagination";
+import { userSearchableFields } from "./user.constant";
 
 // create admin
 const createAdmin = async (req: Request): Promise<Admin> => {
@@ -105,13 +107,52 @@ const createPatient = async (req: Request): Promise<Patient> => {
 };
 
 // get all users
-const getAllUsers = async () => {
+const getAllUsers = async (params: any, options: any) => {
+  const { limit, page, skip, sortBy, sortOrder } =
+    calculatedPagination(options);
+
+  const { searchTerm, ...filterData } = params;
+
+  const filters: Prisma.UserWhereInput[] = [];
+
+  if (params?.searchTerm) {
+    filters.push({
+      OR: userSearchableFields.map((field) => ({
+        [field]: {
+          contains: params.searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    filters.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
+  filterData.push({
+    isDeleted: false,
+  });
+
+  const where: Prisma.UserWhereInput = { AND: filters };
+
   const result = await prisma.user.findMany({
-    include: {
-      admin: true,
-      doctor: true,
-      patient: true,
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      sortBy && sortOrder
+        ? {
+            [sortBy]: sortOrder,
+          }
+        : {
+            createdAt: "desc",
+          },
   });
 
   return result;
