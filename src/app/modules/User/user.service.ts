@@ -155,6 +155,7 @@ const getAllUsersFromDB = async (
         : {
             createdAt: "desc",
           },
+
     select: {
       id: true,
       email: true,
@@ -163,10 +164,24 @@ const getAllUsersFromDB = async (
       status: true,
       createdAt: true,
       updatedAt: true,
+
+      admin: {
+        select: {
+          name: true,
+        },
+      },
+      doctor: {
+        select: {
+          name: true,
+        },
+      },
+      patient: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
-
-
 
   return {
     meta: {
