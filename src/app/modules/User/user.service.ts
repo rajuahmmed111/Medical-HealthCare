@@ -108,7 +108,10 @@ const createPatient = async (req: Request): Promise<Patient> => {
 };
 
 // get all users
-const getAllUsersFromDB = async (params: IUserFilterRequest, options: IPaginationOptions) => {
+const getAllUsersFromDB = async (
+  params: IUserFilterRequest,
+  options: IPaginationOptions
+) => {
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
@@ -137,7 +140,6 @@ const getAllUsersFromDB = async (params: IUserFilterRequest, options: IPaginatio
       })),
     });
   }
- 
 
   const where: Prisma.UserWhereInput = { AND: filters };
 
@@ -153,17 +155,27 @@ const getAllUsersFromDB = async (params: IUserFilterRequest, options: IPaginatio
         : {
             createdAt: "desc",
           },
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
+
+
   return {
-    meta:{
+    meta: {
       total: await prisma.user.count(),
       page,
-      limit
-    }
-    ,
+      limit,
+    },
     data: result,
-  }
+  };
 };
 
 export const userService = {
