@@ -1,4 +1,12 @@
-import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client";
+import httpStatus from "http-status";
+import {
+  Admin,
+  Doctor,
+  Patient,
+  Prisma,
+  UserRole,
+  UserStatus,
+} from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 import { uploadFile } from "../../../Helpers/fileUpload";
@@ -7,6 +15,7 @@ import { Request } from "express";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { userSearchableFields } from "./user.constant";
 import { IPaginationOptions, IUserFilterRequest } from "./user.interface";
+import ApiError from "../../../Error/apiError";
 
 // create admin
 const createAdmin = async (req: Request): Promise<Admin> => {
@@ -181,9 +190,28 @@ const getAllUsersFromDB = async (
   };
 };
 
+// update profile status
+const updateProfileStatus = async (id: string, status: UserRole) => {
+  const existingUser = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!existingUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: { status },
+  });
+
+  return updatedUser;
+};
+
 export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
   getAllUsersFromDB,
+  updateProfileStatus,
 };

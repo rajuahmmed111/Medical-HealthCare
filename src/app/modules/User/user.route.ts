@@ -45,4 +45,11 @@ router.post(
   userController.createPatient
 );
 
+// update profile status
+router.patch(
+  "/:id/status",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.updateProfileStatus
+);
+
 export const userRoute = router;
