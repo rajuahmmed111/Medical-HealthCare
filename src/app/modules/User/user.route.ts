@@ -42,7 +42,7 @@ router.post(
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  userController.getAllUsers
+  userController.getAllUsersFromDB
 );
 
 export const userRoute = router;

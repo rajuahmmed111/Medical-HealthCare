@@ -43,10 +43,10 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 // get all users
-const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+const getAllUsersFromDB = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await userService.getAllUsers(filter, options);
+  const result = await userService.getAllUsersFromDB(filter, options);
 
   sendResponse(res, {
     success: true,
@@ -60,5 +60,5 @@ export const userController = {
   createAdmin,
   createDoctor,
   createPatient,
-  getAllUsers,
+  getAllUsersFromDB,
 };

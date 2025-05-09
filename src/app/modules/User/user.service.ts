@@ -6,6 +6,7 @@ import { IUploadedFile } from "../../../Interface/file";
 import { Request } from "express";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { userSearchableFields } from "./user.constant";
+import { IPaginationOptions, IUserFilterRequest } from "./user.interface";
 
 // create admin
 const createAdmin = async (req: Request): Promise<Admin> => {
@@ -107,7 +108,7 @@ const createPatient = async (req: Request): Promise<Patient> => {
 };
 
 // get all users
-const getAllUsers = async (params: any, options: any) => {
+const getAllUsersFromDB = async (params: IUserFilterRequest, options: IPaginationOptions) => {
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
@@ -168,5 +169,5 @@ export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
-  getAllUsers,
+  getAllUsersFromDB,
 };

@@ -1,3 +1,17 @@
-export const filterField = ["searchTerm", "name", "email", "contactNumber"];
-export const adminSearchableFields =  ["name", "email", "contactNumber"];
-export const paginationField = ["limit", "page", "sortBy", "sortOrder"];
+export const filterField: string[] = [
+  "searchTerm",
+  "name",
+  "email",
+  "contactNumber",
+];
+export const adminSearchableFields: string[] = [
+  "name",
+  "email",
+  "contactNumber",
+];
+export const paginationField: string[] = [
+  "limit",
+  "page",
+  "sortBy",
+  "sortOrder",
+];
