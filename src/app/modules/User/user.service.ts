@@ -282,12 +282,19 @@ const getMyProfile = async (id: string) => {
 };
 
 // update my profile
-const updateMyProfile = async (id: string, payload: any) => {
+const updateMyProfile = async (id: string, req: Request) => {
   const userInfo = await prisma.user.findUnique({
     where: { id, status: UserStatus.ACTIVE },
   });
   if (!userInfo) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // upload file
+  const file = req.file as IUploadedFile;
+  if (file) {
+    const cloudinaryResponse = await uploadFile.uploadToCloudinary(file);
+    req.body.profilePhoto = cloudinaryResponse?.secure_url;
   }
 
   const roleModelMap: Record<UserRole, (email: string) => Promise<any>> = {
@@ -296,28 +303,28 @@ const updateMyProfile = async (id: string, payload: any) => {
         where: {
           email: userInfo.email,
         },
-        data: payload,
+        data: req.body,
       }),
     [UserRole.ADMIN]: (email: string) =>
       prisma.admin.update({
         where: {
           email: userInfo.email,
         },
-        data: payload,
+        data: req.body,
       }),
     [UserRole.DOCTOR]: (email: string) =>
       prisma.doctor.update({
         where: {
           email: userInfo.email,
         },
-        data: payload,
+        data: req.body,
       }),
     [UserRole.PATIENT]: (email: string) =>
       prisma.patient.update({
         where: {
           email: userInfo.email,
         },
-        data: payload,
+        data: req.body,
       }),
   };
 

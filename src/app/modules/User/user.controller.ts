@@ -86,8 +86,7 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 // update my profile
 const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.user;
-  const data = req.body;
-  const result = await userService.updateMyProfile(id, data);
+  const result = await userService.updateMyProfile(id, req);
 
   sendResponse(res, {
     success: true,
