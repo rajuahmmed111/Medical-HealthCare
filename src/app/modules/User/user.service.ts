@@ -135,9 +135,7 @@ const getAllUsers = async (params: any, options: any) => {
       })),
     });
   }
-  filterData.push({
-    isDeleted: false,
-  });
+ 
 
   const where: Prisma.UserWhereInput = { AND: filters };
 
