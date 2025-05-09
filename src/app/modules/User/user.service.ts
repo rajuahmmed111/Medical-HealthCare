@@ -165,21 +165,9 @@ const getAllUsersFromDB = async (
       createdAt: true,
       updatedAt: true,
 
-      admin: {
-        select: {
-          name: true,
-        },
-      },
-      doctor: {
-        select: {
-          name: true,
-        },
-      },
-      patient: {
-        select: {
-          name: true,
-        },
-      },
+      admin: true,
+      doctor: true,
+      patient: true,
     },
   });
 
