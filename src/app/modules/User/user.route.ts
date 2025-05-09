@@ -60,4 +60,14 @@ router.get(
   userController.getMyProfile
 );
 
+// update my profile
+router.patch(
+  "/update-my-profile",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  uploadFile.profileImage,
+  parseBodyData,
+  // validateRequest(UserValidation.updateMyProfile),
+  userController.updateMyProfile
+);
+
 export const userRoute = router;

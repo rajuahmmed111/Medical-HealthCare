@@ -211,7 +211,7 @@ const updateProfileStatus = async (id: string, status: UserStatus) => {
 // get my profile
 const getMyProfile = async (id: string) => {
   const userInfo = await prisma.user.findUnique({
-    where: { id },
+    where: { id, status: UserStatus.ACTIVE },
     select: {
       id: true,
       email: true,
@@ -281,6 +281,50 @@ const getMyProfile = async (id: string) => {
   return { ...userInfo, ...profileInfo };
 };
 
+// update my profile
+const updateMyProfile = async (id: string, payload: any) => {
+  const userInfo = await prisma.user.findUnique({
+    where: { id, status: UserStatus.ACTIVE },
+  });
+  if (!userInfo) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const roleModelMap: Record<UserRole, (email: string) => Promise<any>> = {
+    [UserRole.SUPER_ADMIN]: (email: string) =>
+      prisma.admin.update({
+        where: {
+          email: userInfo.email,
+        },
+        data: payload,
+      }),
+    [UserRole.ADMIN]: (email: string) =>
+      prisma.admin.update({
+        where: {
+          email: userInfo.email,
+        },
+        data: payload,
+      }),
+    [UserRole.DOCTOR]: (email: string) =>
+      prisma.doctor.update({
+        where: {
+          email: userInfo.email,
+        },
+        data: payload,
+      }),
+    [UserRole.PATIENT]: (email: string) =>
+      prisma.patient.update({
+        where: {
+          email: userInfo.email,
+        },
+        data: payload,
+      }),
+  };
+
+  const profileInfo = await roleModelMap[userInfo.role](userInfo.email);
+  return { ...profileInfo };
+};
+
 export const userService = {
   createAdmin,
   createDoctor,
@@ -288,4 +332,5 @@ export const userService = {
   getAllUsersFromDB,
   updateProfileStatus,
   getMyProfile,
+  updateMyProfile,
 };
