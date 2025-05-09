@@ -9,6 +9,13 @@ import { UserValidation } from "./user.validation";
 
 const router = express.Router();
 
+// get all users
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getAllUsersFromDB
+);
+
 // create admin
 router.post(
   "/create-admin",
@@ -36,13 +43,6 @@ router.post(
   parseBodyData, // must come before validation
   validateRequest(UserValidation.createPatient),
   userController.createPatient
-);
-
-// get all users
-router.get(
-  "/",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  userController.getAllUsersFromDB
 );
 
 export const userRoute = router;
