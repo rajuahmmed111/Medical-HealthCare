@@ -116,6 +116,7 @@ const getAllUsersFromDB = async (params: IUserFilterRequest, options: IPaginatio
 
   const filters: Prisma.UserWhereInput[] = [];
 
+  // text search
   if (params?.searchTerm) {
     filters.push({
       OR: userSearchableFields.map((field) => ({
