@@ -217,26 +217,59 @@ const getMyProfile = async (id: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  let profileInfo: any;
-  if (userInfo.role === UserRole.SUPER_ADMIN) {
-    profileInfo = await prisma.admin.findUnique({
-      where: { id },
-    });
-  } else if (userInfo.role === UserRole.ADMIN) {
-    profileInfo = await prisma.admin.findUnique({
-      where: { id },
-    });
-  } else if (userInfo.role === UserRole.DOCTOR) {
-    profileInfo = await prisma.doctor.findUnique({
-      where: { id },
-    });
-  } else if (userInfo.role === UserRole.PATIENT) {
-    profileInfo = await prisma.patient.findUnique({
-      where: { id },
-    });
-  }
+  // system - 1:
+  // let profileInfo: any;
+  // if (userInfo.role === UserRole.SUPER_ADMIN) {
+  //   profileInfo = await prisma.admin.findUnique({
+  //     where: {
+  //       email: userInfo.email,
+  //     },
+  //   });
+  // } else if (userInfo.role === UserRole.ADMIN) {
+  //   profileInfo = await prisma.admin.findUnique({
+  //     where: { email: userInfo.email },
+  //   });
+  // } else if (userInfo.role === UserRole.DOCTOR) {
+  //   profileInfo = await prisma.doctor.findUnique({
+  //     where: { email: userInfo.email },
+  //   });
+  // } else if (userInfo.role === UserRole.PATIENT) {
+  //   profileInfo = await prisma.patient.findUnique({
+  //     where: { email: userInfo.email },
+  //   });
+  // }
 
-  return {...userInfo, ...profileInfo};
+  // system - 2:
+  const roleModelMap: Record<UserRole, (email: string) => Promise<any>> = {
+    [UserRole.SUPER_ADMIN]: (email: string) =>
+      prisma.admin.findUnique({
+        where: {
+          email,
+        },
+      }),
+    [UserRole.ADMIN]: (email: string) =>
+      prisma.admin.findUnique({
+        where: {
+          email,
+        },
+      }),
+    [UserRole.DOCTOR]: (email: string) =>
+      prisma.doctor.findUnique({
+        where: {
+          email,
+        },
+      }),
+    [UserRole.PATIENT]: (email: string) =>
+      prisma.patient.findUnique({
+        where: {
+          email,
+        },
+      }),
+  };
+
+  const profileInfo = await roleModelMap[userInfo.role](userInfo.email);
+
+  return { ...userInfo, ...profileInfo };
 };
 
 export const userService = {
