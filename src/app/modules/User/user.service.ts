@@ -191,7 +191,10 @@ const getAllUsersFromDB = async (
 };
 
 // update profile status
-const updateProfileStatus = async (id: string, status: UserStatus) => {
+const updateProfileStatus = async (
+  id: string,
+  status: UserStatus
+): Promise<any> => {
   const existingUser = await prisma.user.findUnique({
     where: { id },
   });
@@ -209,7 +212,7 @@ const updateProfileStatus = async (id: string, status: UserStatus) => {
 };
 
 // get my profile
-const getMyProfile = async (id: string) => {
+const getMyProfile = async (id: string): Promise<any> => {
   const userInfo = await prisma.user.findUnique({
     where: { id, status: UserStatus.ACTIVE },
     select: {
@@ -282,7 +285,10 @@ const getMyProfile = async (id: string) => {
 };
 
 // update my profile
-const updateMyProfile = async (id: string, req: Request) => {
+const updateMyProfile = async (
+  id: string,
+  req: Request
+): Promise<Admin | Doctor | Patient> => {
   const userInfo = await prisma.user.findUnique({
     where: { id, status: UserStatus.ACTIVE },
   });
