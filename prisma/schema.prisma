@@ -124,17 +124,13 @@ model Specialties {
 }
 
 model DoctorSpecialties {
-  id String @id @default(uuid())
-
   // relations
   doctorId      String
   specialtiesId String
   specialties   Specialties @relation(fields: [specialtiesId], references: [id])
   doctor        Doctor      @relation(fields: [doctorId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  @@id([doctorId, specialtiesId])
   @@map("doctor_specialties")
 }
 
@@ -152,16 +148,12 @@ model Schedule {
 }
 
 model DoctorSchedule {
-  id String @id @default(uuid())
-
   // relations
   doctorId   String
   scheduleId String
   schedule   Schedule @relation(fields: [scheduleId], references: [id])
   doctor     Doctor   @relation(fields: [doctorId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  @@id([scheduleId, doctorId])
   @@map("doctor_schedule")
 }
