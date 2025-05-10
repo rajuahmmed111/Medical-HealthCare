@@ -4,7 +4,7 @@ import { Request } from "express";
 import { IUploadedFile } from "../../../Interface/file";
 import { uploadFile } from "../../../Helpers/fileUpload";
 
-const createSpecialties = async (req: Request) => {
+const createSpecialties = async (req: Request): Promise<Specialties> => {
   const file = req.file as IUploadedFile;
   if (file) {
     const uploadToCloudinary = await uploadFile.uploadToCloudinary(file);
