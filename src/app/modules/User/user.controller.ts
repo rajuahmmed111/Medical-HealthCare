@@ -4,7 +4,8 @@ import { userService } from "./user.service";
 import sendResponse from "../../../Utils/sendResponse";
 import { Request, Response } from "express";
 import { pick } from "../../../shared/pick";
-import { filterField, paginationField } from "./user.constant";
+import { filterField } from "./user.constant";
+import { paginationField } from "../../../Interface/common";
 
 // create admin
 const createAdmin = catchAsync(async (req: Request, res: Response) => {

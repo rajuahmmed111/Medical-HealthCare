@@ -14,8 +14,9 @@ import { IUploadedFile } from "../../../Interface/file";
 import { Request } from "express";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { userSearchableFields } from "./user.constant";
-import { IPaginationOptions, IUserFilterRequest } from "./user.interface";
+import {  IUserFilterRequest } from "./user.interface";
 import ApiError from "../../../Error/apiError";
+import { IPaginationOptions } from "../../../Interface/common";
 
 // create admin
 const createAdmin = async (req: Request): Promise<Admin> => {

@@ -4,7 +4,8 @@ import sendResponse from "../../../Utils/sendResponse";
 import { AdminService } from "./admin.service";
 import { Request, Response } from "express";
 import { pick } from "../../../shared/pick";
-import { filterField, paginationField } from "./admin.constant";
+import { filterField } from "./admin.constant";
+import { paginationField } from "../../../Interface/common";
 
 // get admins
 const getAdmins = catchAsync(async (req: Request, res: Response) => {

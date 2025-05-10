@@ -1,13 +1,18 @@
+import httpStatus from "http-status";
 import { Admin, Prisma, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { searchFilter } from "../../../Helpers/searchFilter";
 import { adminSearchableFields } from "./admin.constant";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
-import { IAdminFilterRequest, IPaginationOptions } from "./admin.interface";
+import { IAdminFilterRequest } from "./admin.interface";
+import { IPaginationOptions } from "../../../Interface/common";
+import ApiError from "../../../Error/apiError";
 
 // search filter way : 1
-const getAdmins = async (params: IAdminFilterRequest, options: IPaginationOptions) => {
-
+const getAdmins = async (
+  params: IAdminFilterRequest,
+  options: IPaginationOptions
+) => {
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
@@ -125,7 +130,7 @@ const deleteAdminByIdFromDB = async (id: string): Promise<Admin | null> => {
     where: { id, isDeleted: false },
   });
   if (!existingAdmin) {
-    throw new Error("Admin not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -134,10 +139,10 @@ const deleteAdminByIdFromDB = async (id: string): Promise<Admin | null> => {
       throw new Error("Admin not found");
     }
 
-    const deleteUser = await tx.admin.delete({
+    await tx.user.delete({
       where: { email: deletedAdmin?.email },
     });
-    return deleteUser;
+    return deletedAdmin;
   });
 
   return result;
