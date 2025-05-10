@@ -23,10 +23,11 @@ cloudinary.config({
 const upload = multer({ storage: storage });
 
 const profileImage = upload.single("profileImage");
+const specialtiesIcon = upload.single("specialtiesIcon");
 
 const uploadToCloudinary = async (
   file: IUploadedFile
-): Promise<ICloudinaryUploadResponse| undefined> => {
+): Promise<ICloudinaryUploadResponse | undefined> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       file.path,
@@ -46,5 +47,6 @@ const uploadToCloudinary = async (
 export const uploadFile = {
   upload,
   profileImage,
+  specialtiesIcon,
   uploadToCloudinary,
 };

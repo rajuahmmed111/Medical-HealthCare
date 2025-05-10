@@ -4,8 +4,7 @@ import sendResponse from "../../../Utils/sendResponse";
 import { SpecialtiesService } from "./specialties.service";
 
 const createSpecialties = catchAsync(async (req: Request, res: Response) => {
-  const data = req.body;
-  const result = await SpecialtiesService.createSpecialties(data);
+  const result = await SpecialtiesService.createSpecialties(req);
 
   sendResponse(res, {
     statusCode: 200,
