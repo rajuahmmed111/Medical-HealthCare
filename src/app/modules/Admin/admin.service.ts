@@ -179,7 +179,7 @@ const softDeleteAdminByIdFromDB = async (id: string): Promise<Admin | void> => {
   // return result;
 };
 
-export const adminService = {
+export const AdminService = {
   getAdmins,
   getAdminByIdFromDB,
   updateAdminByIdIntoDB,

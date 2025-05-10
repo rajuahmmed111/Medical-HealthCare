@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../../Utils/catchAsync";
 import sendResponse from "../../../Utils/sendResponse";
-import { adminService } from "./admin.service";
+import { AdminService } from "./admin.service";
 import { Request, Response } from "express";
 import { pick } from "../../../shared/pick";
 import { filterField, paginationField } from "./admin.constant";
@@ -11,7 +11,7 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
 
-  const result = await adminService.getAdmins(filter, options);
+  const result = await AdminService.getAdmins(filter, options);
 
   sendResponse(res, {
     statusCode: 200,
@@ -25,7 +25,7 @@ const getAdmins = catchAsync(async (req: Request, res: Response) => {
 // gets admin by id
 const getAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.getAdminByIdFromDB(id);
+  const result = await AdminService.getAdminByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
@@ -40,7 +40,7 @@ const updateAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
 
-  const result = await adminService.updateAdminByIdIntoDB(id, data);
+  const result = await AdminService.updateAdminByIdIntoDB(id, data);
 
   sendResponse(res, {
     statusCode: 200,
@@ -53,7 +53,7 @@ const updateAdminById = catchAsync(async (req: Request, res: Response) => {
 // delete admin by id
 const deleteAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.deleteAdminByIdFromDB(id);
+  const result = await AdminService.deleteAdminByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
@@ -66,7 +66,7 @@ const deleteAdminById = catchAsync(async (req: Request, res: Response) => {
 // soft delete admin by id
 const softDeleteAdminById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.softDeleteAdminByIdFromDB(id);
+  const result = await AdminService.softDeleteAdminByIdFromDB(id);
 
   sendResponse(res, {
     statusCode: 200,
@@ -76,7 +76,7 @@ const softDeleteAdminById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const adminController = {
+export const AdminController = {
   getAdmins,
   getAdminById,
   updateAdminById,

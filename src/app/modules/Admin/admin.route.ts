@@ -1,5 +1,5 @@
 import express from "express";
-import { adminController } from "./admin.controller";
+import { AdminController } from "./admin.controller";
 import validateRequest from "../../Middleware/validateRequest";
 import { AdminValidation } from "./zod.validate";
 import auth from "../../Middleware/auth";
@@ -10,14 +10,14 @@ const router = express.Router();
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  adminController.getAdmins
+  AdminController.getAdmins
 );
 
 // get admin by id
 router.get(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  adminController.getAdminById
+  AdminController.getAdminById
 );
 
 // update  admin by id
@@ -25,21 +25,21 @@ router.patch(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(AdminValidation.updateAdmin),
-  adminController.updateAdminById
+  AdminController.updateAdminById
 );
 
 // delete admin by id
 router.delete(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  adminController.deleteAdminById
+  AdminController.deleteAdminById
 );
 
 // soft delete admin by id
 router.patch(
   "/soft/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  adminController.softDeleteAdminById
+  AdminController.softDeleteAdminById
 );
 
 export const adminRoute = router;
