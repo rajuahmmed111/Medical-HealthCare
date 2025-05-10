@@ -5,7 +5,9 @@ import { IUploadedFile } from "../../../Interface/file";
 import { uploadFile } from "../../../Helpers/fileUpload";
 
 // create specialties
-const createSpecialties = async (req: Request): Promise<Specialties> => {
+const createSpecialties = async (
+  req: Request
+): Promise<Specialties | undefined> => {
   const file = req.file as IUploadedFile;
   if (file) {
     const uploadToCloudinary = await uploadFile.uploadToCloudinary(file);
@@ -24,7 +26,7 @@ const getAllFromDB = async (): Promise<Specialties[]> => {
 };
 
 // delete Specialties
-const deleteFromDB = async (id: string): Promise<Specialties> => {
+const deleteFromDB = async (id: string): Promise<Specialties | void> => {
   const isExisting = await prisma.specialties.findUnique({
     where: {
       id,
@@ -34,12 +36,11 @@ const deleteFromDB = async (id: string): Promise<Specialties> => {
     throw new Error("Specialties not found");
   }
 
-  const result = await prisma.specialties.delete({
+  await prisma.specialties.delete({
     where: {
       id,
     },
   });
-  return result;
 };
 
 export const SpecialtiesService = {
