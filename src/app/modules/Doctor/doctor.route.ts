@@ -41,4 +41,4 @@ router.patch(
   DoctorController.softDeleteDoctorById
 );
 
-export const adminRoute = router;
+export const doctorRoute = router;
