@@ -22,7 +22,7 @@ router.get(
 // update by id
 router.patch(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
   //   validateRequest(AdminValidation.updateAdmin),
   DoctorController.updateDoctorById
 );
