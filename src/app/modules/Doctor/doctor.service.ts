@@ -120,12 +120,26 @@ const updateDoctorByIdIntoDB = async (
     throw new ApiError(httpStatus.NOT_FOUND, "Doctor not found");
   }
 
-  const result = await prisma.doctor.update({
-    where: {
-      id,
-      isDeleted: false,
-    },
-    data: doctorData,
+  // update doctor and create doctor specialties in one transaction
+  const result = await prisma.$transaction(async (tx) => {
+    const updatedDoctor = await tx.doctor.update({
+      where: {
+        id,
+        isDeleted: false,
+      },
+      data: doctorData,
+    });
+
+    for (const specialtiesId of specialties) {
+      await tx.doctorSpecialties.create({
+        data: {
+          doctorId: existingDoctor.id,
+          specialtiesId: specialtiesId,
+        },
+      });
+    }
+
+    return updatedDoctor;
   });
 
   return result;
