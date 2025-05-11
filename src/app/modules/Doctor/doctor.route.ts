@@ -5,21 +5,21 @@ import { UserRole } from "@prisma/client";
 import { DoctorController } from "./doctor.controller";
 const router = express.Router();
 
-// get all admins
+// get all
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   DoctorController.getDoctors
 );
 
-// get admin by id
+// get  by id
 router.get(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   DoctorController.getDoctorById
 );
 
-// update  admin by id
+// update by id
 router.patch(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
@@ -27,14 +27,14 @@ router.patch(
   DoctorController.updateDoctorById
 );
 
-// delete admin by id
+// delete by id
 router.delete(
   "/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   DoctorController.deleteDoctorById
 );
 
-// soft delete admin by id
+// soft delete by id
 router.patch(
   "/soft/:id",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),

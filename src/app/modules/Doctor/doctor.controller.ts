@@ -51,7 +51,7 @@ const updateDoctorById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// delete admin by id
+// delete doctor by id
 const deleteDoctorById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await DoctorService.deleteDoctorByIdFromDB(id);
@@ -64,7 +64,7 @@ const deleteDoctorById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// soft delete admin by id
+// soft delete doctor by id
 const softDeleteDoctorById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await DoctorService.softDeleteDoctorByIdFromDB(id);

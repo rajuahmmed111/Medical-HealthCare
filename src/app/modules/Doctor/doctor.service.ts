@@ -151,7 +151,7 @@ const deleteDoctorByIdFromDB = async (id: string): Promise<Doctor | null> => {
   return result;
 };
 
-// soft delete admin by id
+// soft delete doctor by id
 const softDeleteDoctorByIdFromDB = async (
   id: string
 ): Promise<Doctor | void> => {
