@@ -107,8 +107,12 @@ const getDoctorByIdFromDB = async (id: string): Promise<Doctor | null> => {
 // update doctor by id
 const updateDoctorByIdIntoDB = async (
   id: string,
-  data: Partial<Doctor>
+  payload: any
 ): Promise<Doctor | null> => {
+  const { specialties, ...doctorData } = payload;
+  console.log(specialties, "specialties");
+  console.log(doctorData, "doctorData");
+
   const existingDoctor = await prisma.doctor.findUnique({
     where: { id },
   });
@@ -121,7 +125,7 @@ const updateDoctorByIdIntoDB = async (
       id,
       isDeleted: false,
     },
-    data,
+    data: doctorData,
   });
 
   return result;
@@ -159,13 +163,13 @@ const softDeleteDoctorByIdFromDB = async (
     where: { id, isDeleted: false },
   });
   if (!existingDoctor) {
-    throw new ApiError(httpStatus.NOT_FOUND,"Doctor not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Doctor not found");
   }
 
   const result = await prisma.$transaction(async (tx) => {
     const deletedDoctor = await tx.doctor.findUnique({ where: { id } });
     if (!deletedDoctor) {
-      throw new ApiError(httpStatus.NOT_FOUND,"Doctor not found");
+      throw new ApiError(httpStatus.NOT_FOUND, "Doctor not found");
     }
 
     const updateAdmin = await tx.doctor.update({
