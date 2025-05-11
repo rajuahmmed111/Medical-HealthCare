@@ -40,6 +40,7 @@ const getDoctorById = catchAsync(async (req: Request, res: Response) => {
 const updateDoctorById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
+  // console.log(id, data);
 
   const result = await DoctorService.updateDoctorByIdIntoDB(id, data);
 
