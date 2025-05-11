@@ -16,6 +16,10 @@ const moduleRoutes = [
     route: adminRoute,
   },
   {
+    path: "/doctors",
+    route: adminRoute,
+  },
+  {
     path: "/auth",
     route: authRoute,
   },
