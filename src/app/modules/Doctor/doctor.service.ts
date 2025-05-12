@@ -110,8 +110,6 @@ const updateDoctorByIdIntoDB = async (
   payload: any
 ): Promise<Doctor | null> => {
   const { specialties, ...doctorData } = payload;
-  console.log(specialties, "specialties");
-  console.log(doctorData, "doctorData");
 
   const existingDoctor = await prisma.doctor.findUnique({
     where: { id },
@@ -128,15 +126,37 @@ const updateDoctorByIdIntoDB = async (
         isDeleted: false,
       },
       data: doctorData,
+      include: {
+        doctorSpecialties: true,
+      }
     });
 
-    for (const specialtiesId of specialties) {
-      await tx.doctorSpecialties.create({
-        data: {
-          doctorId: existingDoctor.id,
-          specialtiesId: specialtiesId,
-        },
-      });
+    if (specialties && specialties.length > 0) {
+      // delete specialties
+      const deletedSpecialtiesIds = await specialties.filter(
+        (specialty: any) => specialty.isDeleted
+      );
+      for (const specialty of deletedSpecialtiesIds) {
+        const deleteDoctorSpecialties = await tx.doctorSpecialties.deleteMany({
+          where: {
+            doctorId: existingDoctor.id,
+            specialtiesId: specialty.specialtiesId,
+          },
+        });
+      }
+
+      // create specialties
+      const createdSpecialtiesIds = await specialties.filter(
+        (specialty: any) => !specialty.isDeleted
+      );
+      for (const specialty of createdSpecialtiesIds) {
+        const createDoctorSpecialties = await tx.doctorSpecialties.create({
+          data: {
+            doctorId: existingDoctor.id,
+            specialtiesId: specialty.specialtiesId,
+          },
+        });
+      }
     }
 
     return updatedDoctor;
