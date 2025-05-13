@@ -42,8 +42,8 @@ enum BloodGroup {
 }
 
 enum MaritalStatus {
-  SINGLE
   MARRIED
+  UNMARRIED
 }
 
 // ------------------------------
