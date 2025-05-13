@@ -60,6 +60,14 @@ const getDoctors = async (
         : {
             createdAt: "desc",
           },
+
+          include: {
+            doctorSpecialties: {
+              include: {
+                specialties: true,
+              },
+            }
+          }
   });
 
   const total = await prisma.doctor.count({ where });
