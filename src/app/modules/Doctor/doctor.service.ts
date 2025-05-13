@@ -167,7 +167,11 @@ const updateDoctorByIdIntoDB = async (
       isDeleted: false,
     },
     include: {
-      doctorSpecialties: true,
+      doctorSpecialties: {
+        include: {
+          specialties: true,
+        }
+      }
     },
   });
 
