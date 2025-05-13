@@ -30,6 +30,22 @@ enum Gender {
   OTHER
 }
 
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+}
+
 // ------------------------------
 //            MODEL
 // ------------------------------
@@ -80,9 +96,49 @@ model Patient {
   updatedAt     DateTime @updatedAt
 
   // relations
-  user User @relation(fields: [email], references: [email])
+  user              User                @relation(fields: [email], references: [email])
+  patientHealthData PatientHealthData[]
+  medicalReport     MedicalReport[]
 
   @@map("patients")
+}
+
+model PatientHealthData {
+  id                  String        @id @default(uuid())
+  patientId           String        @unique
+  patient             Patient       @relation(fields: [patientId], references: [id])
+  dateOfBirth         String
+  gender              Gender
+  bloodGroup          BloodGroup
+  hasAllergies        Boolean?      @default(false)
+  hasDiabetes         Boolean?      @default(false)
+  height              String
+  weight              String
+  smokingStatus       Boolean?      @default(false)
+  dietaryPreferences  String?
+  pregnancyStatus     Boolean?      @default(false)
+  mentalHealthHistory String?
+  immunizationStatus  String?
+  hasPastSurgeries    Boolean?      @default(false)
+  recentAnxiety       Boolean?      @default(false)
+  recentDepression    Boolean?      @default(false)
+  maritalStatus       MaritalStatus
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@map("patient_health_data")
+}
+
+model MedicalReport {
+  id         String   @id @default(uuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  reportName String
+  reportLink String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("medical_reports")
 }
 
 model Doctor {
