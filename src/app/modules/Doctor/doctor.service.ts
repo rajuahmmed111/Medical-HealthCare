@@ -6,6 +6,7 @@ import { IPaginationOptions } from "../../../Interface/common";
 import { IDoctorFilterRequest } from "./doctor.interface";
 import { doctorSearchableFields } from "./doctor.constant";
 import ApiError from "../../../Error/apiError";
+import e from "express";
 
 // search filter way : 1
 const getDoctors = async (
@@ -119,7 +120,7 @@ const updateDoctorByIdIntoDB = async (
   }
 
   // update doctor and create doctor specialties in one transaction
-  const result = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const updatedDoctor = await tx.doctor.update({
       where: {
         id,
@@ -128,7 +129,7 @@ const updateDoctorByIdIntoDB = async (
       data: doctorData,
       include: {
         doctorSpecialties: true,
-      }
+      },
     });
 
     if (specialties && specialties.length > 0) {
@@ -137,7 +138,7 @@ const updateDoctorByIdIntoDB = async (
         (specialty: any) => specialty.isDeleted
       );
       for (const specialty of deletedSpecialtiesIds) {
-        const deleteDoctorSpecialties = await tx.doctorSpecialties.deleteMany({
+        await tx.doctorSpecialties.deleteMany({
           where: {
             doctorId: existingDoctor.id,
             specialtiesId: specialty.specialtiesId,
@@ -150,7 +151,7 @@ const updateDoctorByIdIntoDB = async (
         (specialty: any) => !specialty.isDeleted
       );
       for (const specialty of createdSpecialtiesIds) {
-        const createDoctorSpecialties = await tx.doctorSpecialties.create({
+        await tx.doctorSpecialties.create({
           data: {
             doctorId: existingDoctor.id,
             specialtiesId: specialty.specialtiesId,
@@ -158,8 +159,16 @@ const updateDoctorByIdIntoDB = async (
         });
       }
     }
+  });
 
-    return updatedDoctor;
+  const result = await prisma.doctor.findUnique({
+    where: {
+      id: existingDoctor.id,
+      isDeleted: false,
+    },
+    include: {
+      doctorSpecialties: true,
+    },
   });
 
   return result;
