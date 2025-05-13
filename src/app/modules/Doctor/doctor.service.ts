@@ -121,15 +121,12 @@ const updateDoctorByIdIntoDB = async (
 
   // update doctor and create doctor specialties in one transaction
   await prisma.$transaction(async (tx) => {
-    const updatedDoctor = await tx.doctor.update({
+    await tx.doctor.update({
       where: {
         id,
         isDeleted: false,
       },
       data: doctorData,
-      include: {
-        doctorSpecialties: true,
-      },
     });
 
     if (specialties && specialties.length > 0) {
@@ -170,8 +167,8 @@ const updateDoctorByIdIntoDB = async (
       doctorSpecialties: {
         include: {
           specialties: true,
-        }
-      }
+        },
+      },
     },
   });
 
