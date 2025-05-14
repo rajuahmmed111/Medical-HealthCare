@@ -150,11 +150,9 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
 // };
 
 // update patient
-const updateIntoDB = async (id: string, payload: any) => {
+const updateIntoDB = async (id: string, payload: any): Promise<Patient | null> => {
   const { patientHealthData, medicalReport, ...patientData } = payload;
-  // console.log(patientData);
-  // console.log(patientHealthData);
-  // console.log(medicalReport);
+
 
   const patientInfo = await prisma.patient.findUnique({
     where: {
@@ -166,9 +164,10 @@ const updateIntoDB = async (id: string, payload: any) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Patient not found");
   }
 
-  const result = await prisma.$transaction(async (tx) => {
+  // update patient
+  await prisma.$transaction(async (tx) => {
     //update patient data
-    const updatedPatient = await tx.patient.update({
+    await tx.patient.update({
       where: {
         id,
       },
@@ -181,7 +180,7 @@ const updateIntoDB = async (id: string, payload: any) => {
 
     // create or update patient health data
     if (patientHealthData) {
-      const healthData = await tx.patientHealthData.upsert({
+      await tx.patientHealthData.upsert({
         where: {
           patientId: patientInfo.id,
         },
@@ -192,10 +191,9 @@ const updateIntoDB = async (id: string, payload: any) => {
 
     // create or update medical report
     if (medicalReport) {
-      const report = await tx.medicalReport.create({
+      await tx.medicalReport.create({
         data: { ...medicalReport, patientId: patientInfo.id },
       });
-      console.log(report);
     }
   });
 
