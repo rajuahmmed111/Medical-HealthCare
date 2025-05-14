@@ -150,7 +150,7 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
 // };
 
 // update patient
-const updateIntoDB = async (id: string, payload: any): Promise<Patient | null> => {
+const updateIntoDB = async (id: string, payload: IPatientUpdate): Promise<Patient | null> => {
   const { patientHealthData, medicalReport, ...patientData } = payload;
 
 
