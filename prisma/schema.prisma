@@ -108,7 +108,7 @@ model PatientHealthData {
   patientId           String        @unique
   patient             Patient       @relation(fields: [patientId], references: [id])
   dateOfBirth         String
-  gender              Gender
+  gender              Gender        @default(MALE)
   bloodGroup          BloodGroup    @default(A_POSITIVE)
   hasAllergies        Boolean?      @default(false)
   hasDiabetes         Boolean?      @default(false)
