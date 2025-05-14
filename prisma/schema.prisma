@@ -109,7 +109,7 @@ model PatientHealthData {
   patient             Patient       @relation(fields: [patientId], references: [id])
   dateOfBirth         String
   gender              Gender
-  bloodGroup          BloodGroup
+  bloodGroup          BloodGroup    @default(A_POSITIVE)
   hasAllergies        Boolean?      @default(false)
   hasDiabetes         Boolean?      @default(false)
   height              String
@@ -122,7 +122,7 @@ model PatientHealthData {
   hasPastSurgeries    Boolean?      @default(false)
   recentAnxiety       Boolean?      @default(false)
   recentDepression    Boolean?      @default(false)
-  maritalStatus       MaritalStatus
+  maritalStatus       MaritalStatus @default(UNMARRIED)
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
