@@ -213,7 +213,7 @@ model Schedule {
 
   // relations
   doctorSchedule DoctorSchedule[]
-  appointment    Appointment[]
+  appointment    Appointment?
 
   @@map("schedules")
 }
@@ -223,10 +223,12 @@ model DoctorSchedule {
   scheduleId    String
   doctorId      String
   isBooked      Boolean     @default(false)
-  appointmentId String      @unique
+  appointmentId String?     @unique
+
+  // relations
   schedule      Schedule    @relation(fields: [scheduleId], references: [id])
   doctor        Doctor      @relation(fields: [doctorId], references: [id])
-  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
 
   @@id([doctorId, scheduleId])
   @@map("doctor_schedule")
@@ -236,7 +238,7 @@ model Appointment {
   id             String            @id @default(uuid())
   patientId      String
   doctorId       String
-  scheduleId     String
+  scheduleId     String  @unique
   videoCallingID String
   status         AppointmentStatus @default(IN_PROGRESS)
   paymentStatus  PaymentStatus     @default(UNPAID)
