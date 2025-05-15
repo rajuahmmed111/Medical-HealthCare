@@ -46,6 +46,18 @@ enum MaritalStatus {
   UNMARRIED
 }
 
+enum AppointmentStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
 // ------------------------------
 //            MODEL
 // ------------------------------
@@ -99,6 +111,7 @@ model Patient {
   user              User               @relation(fields: [email], references: [email])
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
+  appointment       Appointment[]
 
   @@map("patients")
 }
@@ -164,6 +177,7 @@ model Doctor {
   user              User                @relation(fields: [email], references: [email])
   doctorSpecialties DoctorSpecialties[]
   doctorSchedule    DoctorSchedule[]
+  appointment       Appointment[]
 
   @@map("doctors")
 }
@@ -199,17 +213,42 @@ model Schedule {
 
   // relations
   doctorSchedule DoctorSchedule[]
+  appointment    Appointment[]
 
   @@map("schedules")
 }
 
 model DoctorSchedule {
   // relations
-  doctorId   String
-  scheduleId String
-  schedule   Schedule @relation(fields: [scheduleId], references: [id])
-  doctor     Doctor   @relation(fields: [doctorId], references: [id])
+  scheduleId    String
+  doctorId      String
+  isBooked      Boolean     @default(false)
+  appointmentId String      @unique
+  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
 
-  @@id([scheduleId, doctorId])
+  @@id([doctorId, scheduleId])
   @@map("doctor_schedule")
+}
+
+model Appointment {
+  id             String            @id @default(uuid())
+  patientId      String
+  doctorId       String
+  scheduleId     String
+  videoCallingID String
+  status         AppointmentStatus @default(IN_PROGRESS)
+  paymentStatus  PaymentStatus     @default(UNPAID)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  // relations
+  patient  Patient  @relation(fields: [patientId], references: [id])
+  doctor   Doctor   @relation(fields: [doctorId], references: [id])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+
+  doctorSchedule DoctorSchedule?
+
+  @@map("appointments")
 }
