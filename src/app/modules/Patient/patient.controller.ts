@@ -8,6 +8,8 @@ import { paginationField } from '../../../Interface/common';
 import sendResponse from '../../../Utils/sendResponse';
 import { PatientService } from './patient.service';
 
+
+// get all patients
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, filterableFields);
   const options = pick(req.query, paginationField);
@@ -23,6 +25,8 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+// get patient by id
 const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
 
   const { id } = req.params;
@@ -36,6 +40,8 @@ const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+// update patient
 const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await PatientService.updateIntoDB(id, req.body);
@@ -48,6 +54,8 @@ const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+// delete patient
 const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await PatientService.deleteFromDB(id);
@@ -59,7 +67,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
+// soft delete
 const softDelete = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await PatientService.softDelete(id);
