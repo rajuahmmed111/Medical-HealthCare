@@ -6,7 +6,8 @@ import { ScheduleService } from "./schedule.service";
 
 // create schedule
 const createSchedule = catchAsync(async (req: Request, res: Response) => {
-  const result = await ScheduleService.createSchedule(req);
+    const data = req.body;
+  const result = await ScheduleService.createSchedule(data);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
