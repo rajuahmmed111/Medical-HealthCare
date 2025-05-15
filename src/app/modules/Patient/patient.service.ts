@@ -7,6 +7,8 @@ import { patientSearchableFields } from "./patient.constant";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import ApiError from "../../../Error/apiError";
 
+
+// get all patient with filtering and pagination
 const getAllFromDB = async (
   filters: IPatientFilterRequest,
   options: IPaginationOptions
@@ -75,6 +77,7 @@ const getAllFromDB = async (
   };
 };
 
+// get single patient
 const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   const result = await prisma.patient.findUnique({
     where: {
@@ -154,6 +157,7 @@ const updateIntoDB = async (id: string, payload: IPatientUpdate): Promise<Patien
   return responseData;
 };
 
+// delete patient
 const deleteFromDB = async (id: string): Promise<Patient | null> => {
   const result = await prisma.$transaction(async (tx) => {
     // delete medical report
@@ -188,6 +192,8 @@ const deleteFromDB = async (id: string): Promise<Patient | null> => {
   return result;
 };
 
+
+// soft delete
 const softDelete = async (id: string): Promise<Patient | null> => {
   return await prisma.$transaction(async (transactionClient) => {
     const deletedPatient = await transactionClient.patient.update({
