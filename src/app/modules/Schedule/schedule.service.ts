@@ -4,6 +4,9 @@ import prisma from "../../../shared/prisma";
 const createSchedule = async (payload: any) => {
   const { startDate, endDate, startTime, endTime } = payload;
   console.log(payload);
+
+  // 
+
 };
 
 export const ScheduleService = {
