@@ -2,9 +2,11 @@ import httpStatus from "http-status";
 import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../Error/apiError";
+import { Schedule } from "@prisma/client";
+import { ISchedulePayload } from "./schedule.interface";
 
 // create schedule
-const createSchedule = async (payload: any) => {
+const createSchedule = async (payload: ISchedulePayload): Promise<Schedule[]> => {
   const { startDate, endDate, startTime, endTime } = payload;
 
   const schedules = [];
@@ -49,15 +51,15 @@ const createSchedule = async (payload: any) => {
           endDateTime: scheduleData.endDateTime,
         },
       });
-      if (checkSchedule) {
-        throw new ApiError(httpStatus.BAD_REQUEST, "Schedule already exist");
-      }
+      // not throw error , because when you throw error it will stop the loop
 
       // create schedule
-      const result = await prisma.schedule.create({
-        data: scheduleData,
-      });
-      schedules.push(result);
+      if (!checkSchedule) {
+        const result = await prisma.schedule.create({
+          data: scheduleData,
+        });
+        schedules.push(result);
+      }
 
       startDateTime.setMinutes(startDateTime.getMinutes() + intervalTime);
     }
