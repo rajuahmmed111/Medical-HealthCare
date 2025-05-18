@@ -1,5 +1,7 @@
+import httpStatus from "http-status";
 import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
+import ApiError from "../../../Error/apiError";
 
 // create schedule
 const createSchedule = async (payload: any) => {
@@ -12,20 +14,26 @@ const createSchedule = async (payload: any) => {
   const lastDate = new Date(endDate); // end date
 
   while (currentDate <= lastDate) {
+    // 09:30 ------> ['09', '30']
     const startDateTime = new Date(
-      addHours(
-        `${format(currentDate, "yyyy-MM-dd")}`,
-        Number(startTime.split(":")[0])
+      addMinutes(
+        addHours(
+          `${format(currentDate, "yyyy-MM-dd")}`,
+          Number(startTime.split(":")[0])
+        ),
+        Number(startTime.split(":")[1])
       )
     );
 
     const endDataTime = new Date(
-      addHours(
-        `${format(currentDate, "yyyy-MM-dd")}`,
-        Number(endTime.split(":")[0])
+      addMinutes(
+        addHours(
+          `${format(currentDate, "yyyy-MM-dd")}`,
+          Number(endTime.split(":")[0])
+        ),
+        Number(endTime.split(":")[1])
       )
     );
-
 
     // separate schedule slot
     while (startDateTime < endDataTime) {
@@ -33,6 +41,17 @@ const createSchedule = async (payload: any) => {
         startDateTime: startDateTime,
         endDateTime: addMinutes(startDateTime, intervalTime),
       };
+
+      // check schedule already exist
+      const checkSchedule = await prisma.schedule.findFirst({
+        where: {
+          startDateTime: scheduleData.startDateTime,
+          endDateTime: scheduleData.endDateTime,
+        },
+      });
+      if (checkSchedule) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Schedule already exist");
+      }
 
       // create schedule
       const result = await prisma.schedule.create({
