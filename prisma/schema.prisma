@@ -205,11 +205,11 @@ model DoctorSpecialties {
 }
 
 model Schedule {
-  id        String   @id @default(uuid())
-  startDateTime String
-  endDateTime   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(uuid())
+  startDateTime DateTime
+  endDateTime   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // relations
   doctorSchedule DoctorSchedule[]
@@ -222,13 +222,13 @@ model DoctorSchedule {
   // relations
   scheduleId    String
   doctorId      String
-  isBooked      Boolean     @default(false)
-  appointmentId String?     @unique
+  isBooked      Boolean @default(false)
+  appointmentId String? @unique
 
   // relations
-  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
-  doctor        Doctor      @relation(fields: [doctorId], references: [id])
-  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+  schedule    Schedule     @relation(fields: [scheduleId], references: [id])
+  doctor      Doctor       @relation(fields: [doctorId], references: [id])
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
 
   @@id([doctorId, scheduleId])
   @@map("doctor_schedule")
@@ -238,7 +238,7 @@ model Appointment {
   id             String            @id @default(uuid())
   patientId      String
   doctorId       String
-  scheduleId     String  @unique
+  scheduleId     String            @unique
   videoCallingID String
   status         AppointmentStatus @default(IN_PROGRESS)
   paymentStatus  PaymentStatus     @default(UNPAID)
