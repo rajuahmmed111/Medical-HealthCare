@@ -5,8 +5,9 @@ import sendResponse from "../../../Utils/sendResponse";
 import { AppointmentService } from "./appointment.service";
 
 const createAppointment = catchAsync(async (req: Request, res: Response) => {
+  const patientEmail = req.user?.email;
   const data = req.body;
-  const result = await AppointmentService.createAppointment(data);
+  const result = await AppointmentService.createAppointment(patientEmail, data);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
