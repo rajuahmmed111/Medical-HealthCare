@@ -79,11 +79,29 @@ const getAllFromDB = async (
   params: any,
   options: IPaginationOptions
 ): Promise<Schedule[]> => {
-  const { searchTerm, ...filterData } = params;
+  const { startDate, endDate, ...filterData } = params;
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
   const filters: Prisma.ScheduleWhereInput[] = [];
+
+  // filter on date
+  if (startDate && endDate) {
+    filters.push({
+      AND: [
+        {
+          startDateTime: {
+            gte: startDate,
+          },
+        },
+        {
+          endDateTime: {
+            lte: endDate,
+          },
+        },
+      ],
+    });
+  }
 
   // Exact search filter
   if (Object.keys(filterData).length > 0) {
@@ -106,7 +124,7 @@ const getAllFromDB = async (
       sortBy && sortOrder
         ? { [sortBy]: sortOrder }
         : {
-            createdAt: "desc",
+            createdAt: "asc",
           },
   });
 
