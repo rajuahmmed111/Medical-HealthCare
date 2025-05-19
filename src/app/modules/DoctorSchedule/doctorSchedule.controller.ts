@@ -1,3 +1,4 @@
+import { Doctor } from '@prisma/client';
 import httpStatus from "http-status";
 import { Request, Response } from "express";
 import catchAsync from "../../../Utils/catchAsync";
@@ -25,7 +26,11 @@ const getMySchedule = catchAsync(async (req: Request, res: Response) => {
   const email = req.user.email;
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await DoctorScheduleService.getMySchedule(email,filter,options);
+  const result = await DoctorScheduleService.getMySchedule(
+    email,
+    filter,
+    options
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -33,9 +38,24 @@ const getMySchedule = catchAsync(async (req: Request, res: Response) => {
     message: "My Schedule retrieved successfully",
     data: result,
   });
-})
+});
+
+// delete Schedule
+const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
+  const DoctorEmail = req.user?.email;
+  const scheduleId = req.params.scheduleId;
+  const result = await DoctorScheduleService.deleteSchedule(DoctorEmail, scheduleId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My Schedule deleted successfully",
+    data: result,
+  });
+});
 
 export const DoctorScheduleController = {
   createDoctorSchedule,
-  getMySchedule
+  getMySchedule,
+  deleteSchedule,
 };

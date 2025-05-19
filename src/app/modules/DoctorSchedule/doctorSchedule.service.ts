@@ -115,7 +115,48 @@ const getMySchedule = async (
   };
 };
 
+// delete Schedule
+const deleteSchedule = async (DoctorEmail: string, scheduleId: string) => {
+  // find doctor
+  const doctorInfo = await prisma.doctor.findUnique({
+    where: {
+      email: DoctorEmail,
+      isDeleted: false,
+    },
+  });
+  if (!doctorInfo) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Doctor not found");
+  }
+
+  // isBooked schedule
+  const isBookedSchedule = await prisma.doctorSchedule.findFirst({
+    where: {
+      doctorId: doctorInfo.id,
+      scheduleId,
+      isBooked: true,
+    },
+  });
+  if (isBookedSchedule) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "You can not delete the schedule because of the schedule is already booked!"
+    );
+  }
+
+  const result = await prisma.doctorSchedule.delete({
+    where: {
+      doctorId_scheduleId: {
+        doctorId: doctorInfo.id,
+        scheduleId,
+      },
+    },
+  });
+
+  return result;
+};
+
 export const DoctorScheduleService = {
   createDoctorSchedule,
   getMySchedule,
+  deleteSchedule,
 };
