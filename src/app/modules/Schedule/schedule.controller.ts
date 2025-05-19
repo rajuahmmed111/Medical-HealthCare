@@ -25,7 +25,24 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   const doctorEmail = req.user?.doctorEmail;
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await ScheduleService.getAllFromDB(filter, options, doctorEmail);
+  const result = await ScheduleService.getAllFromDB(
+    filter,
+    options,
+    doctorEmail
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Schedule retrieved successfully",
+    data: result,
+  });
+});
+
+// get schedule by id
+const getScheduleById = catchAsync(async (req: Request, res: Response) => {
+  const { scheduleId } = req.params;
+  const result = await ScheduleService.getScheduleByIdFromDB(scheduleId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -38,4 +55,5 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 export const ScheduleController = {
   createSchedule,
   getAllFromDB,
+  getScheduleById,
 };

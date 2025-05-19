@@ -176,7 +176,23 @@ const getAllFromDB = async (
   };
 };
 
+// get schedule by id
+const getScheduleByIdFromDB = async (scheduleId: string): Promise<Schedule> => {
+  const result = await prisma.schedule.findUnique({
+    where: {
+      id: scheduleId,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Schedule not found");
+  }
+
+  return result;
+};
+
 export const ScheduleService = {
   createSchedule,
   getAllFromDB,
+  getScheduleByIdFromDB,
 };

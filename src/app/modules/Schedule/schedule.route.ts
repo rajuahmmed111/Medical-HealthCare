@@ -12,6 +12,13 @@ router.get(
   ScheduleController.getAllFromDB
 );
 
+// get schedule by id
+router.get(
+  "/:scheduleId",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
+  ScheduleController.getScheduleById
+);
+
 // create schedule
 router.post(
   "/",
