@@ -3,7 +3,11 @@ import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../Error/apiError";
 import { Prisma, Schedule } from "@prisma/client";
-import { IScheduleFilterRequest, ISchedulePayload, PaginatedResponse } from "./schedule.interface";
+import {
+  IScheduleFilterRequest,
+  ISchedulePayload,
+  PaginatedResponse,
+} from "./schedule.interface";
 import { IPaginationOptions } from "../../../Interface/common";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 
@@ -73,8 +77,6 @@ const createSchedule = async (
 
   return schedules;
 };
-
-
 
 // get all schedule
 const getAllFromDB = async (
