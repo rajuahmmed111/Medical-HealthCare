@@ -2,11 +2,15 @@ import httpStatus from "http-status";
 import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../Error/apiError";
-import { Schedule } from "@prisma/client";
+import { Prisma, Schedule } from "@prisma/client";
 import { ISchedulePayload } from "./schedule.interface";
+import { IPaginationOptions } from "../../../Interface/common";
+import { calculatedPagination } from "../../../Helpers/calculatePagination";
 
 // create schedule
-const createSchedule = async (payload: ISchedulePayload): Promise<Schedule[]> => {
+const createSchedule = async (
+  payload: ISchedulePayload
+): Promise<Schedule[]> => {
   const { startDate, endDate, startTime, endTime } = payload;
 
   const schedules = [];
@@ -71,9 +75,55 @@ const createSchedule = async (payload: ISchedulePayload): Promise<Schedule[]> =>
 };
 
 // get all schedule
-const getAllFromDB = async (): Promise<Schedule[]> => {
-  const result = await prisma.schedule.findMany();
-  return result;
+const getAllFromDB = async (
+  params: any,
+  options: IPaginationOptions
+): Promise<Schedule[]> => {
+  const { searchTerm, ...filterData } = params;
+  const { limit, page, skip, sortBy, sortOrder } =
+    calculatedPagination(options);
+
+  const filters: Prisma.ScheduleWhereInput[] = [];
+
+  // Exact search filter
+  if (Object.keys(filterData).length > 0) {
+    filters.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
+
+  const where: Prisma.ScheduleWhereInput = { AND: filters };
+
+  const result = await prisma.schedule.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      sortBy && sortOrder
+        ? { [sortBy]: sortOrder }
+        : {
+            createdAt: "desc",
+          },
+  });
+
+  // if (result.length === 0) {
+  //   throw new ApiError(httpStatus.NOT_FOUND, "Schedule not found");
+  // }
+
+  const total = await prisma.schedule.count({ where });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
 };
 
 export const ScheduleService = {
