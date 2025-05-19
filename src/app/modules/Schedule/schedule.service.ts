@@ -191,8 +191,19 @@ const getScheduleByIdFromDB = async (scheduleId: string): Promise<Schedule> => {
   return result;
 };
 
+// delete schedule by id
+const deleteScheduleFromDB = async (scheduleId: string): Promise<Schedule> => {
+  const result = await prisma.schedule.delete({
+    where: {
+      id: scheduleId,
+    },
+  });
+  
+  return result;
+}
 export const ScheduleService = {
   createSchedule,
   getAllFromDB,
   getScheduleByIdFromDB,
+  deleteScheduleFromDB,
 };

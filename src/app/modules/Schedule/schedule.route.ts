@@ -19,11 +19,21 @@ router.get(
   ScheduleController.getScheduleById
 );
 
+
+
 // create schedule
 router.post(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   ScheduleController.createSchedule
+);
+
+
+// delete schedule
+router.delete(
+  "/:scheduleId",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  ScheduleController.deleteSchedule
 );
 
 export const scheduleRoute = router;
