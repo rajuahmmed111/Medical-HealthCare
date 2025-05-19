@@ -9,3 +9,12 @@ export interface IScheduleFilterRequest {
   startDate?: string | undefined;
   endDate?: string | undefined;
 }
+
+export type PaginatedResponse<T> = {
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+  data: T[];
+};
