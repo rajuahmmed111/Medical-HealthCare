@@ -22,9 +22,10 @@ const createSchedule = catchAsync(async (req: Request, res: Response) => {
 
 // get all schedule
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const doctorEmail = req.user?.doctorEmail;
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await ScheduleService.getAllFromDB(filter, options);
+  const result = await ScheduleService.getAllFromDB(filter, options, doctorEmail);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

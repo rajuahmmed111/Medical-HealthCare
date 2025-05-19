@@ -77,7 +77,8 @@ const createSchedule = async (
 // get all schedule
 const getAllFromDB = async (
   params: any,
-  options: IPaginationOptions
+  options: IPaginationOptions,
+  doctorEmail: string
 ): Promise<Schedule[]> => {
   const { startDate, endDate, ...filterData } = params;
   const { limit, page, skip, sortBy, sortOrder } =
@@ -114,10 +115,30 @@ const getAllFromDB = async (
     });
   }
 
-  const where: Prisma.ScheduleWhereInput = { AND: filters };
+  const whereConditions: Prisma.ScheduleWhereInput =
+    filters.length > 0 ? { AND: filters } : {};
+
+  // find doctor schedule
+  const doctorSchedules = await prisma.doctorSchedule.findMany({
+    where: {
+      doctor: {
+        email: doctorEmail,
+        isDeleted: false,
+      },
+    },
+  });
+
+  const doctorScheduleIds = doctorSchedules.map(
+    (schedule: any) => schedule.scheduleId
+  );
 
   const result = await prisma.schedule.findMany({
-    where,
+    where: {
+      ...whereConditions,
+      id: {
+        notIn: doctorScheduleIds,
+      },
+    },
     skip,
     take: limit,
     orderBy:
@@ -128,11 +149,18 @@ const getAllFromDB = async (
           },
   });
 
-  // if (result.length === 0) {
-  //   throw new ApiError(httpStatus.NOT_FOUND, "Schedule not found");
-  // }
+  if (result.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Schedule not found");
+  }
 
-  const total = await prisma.schedule.count({ where });
+  const total = await prisma.schedule.count({
+    where: {
+      ...whereConditions,
+      id: {
+        notIn: doctorScheduleIds,
+      },
+    },
+  });
 
   return {
     meta: {
