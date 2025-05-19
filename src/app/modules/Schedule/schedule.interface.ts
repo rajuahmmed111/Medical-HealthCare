@@ -4,3 +4,8 @@ export interface ISchedulePayload {
   startTime: string;
   endTime: string; // Format: "HH:mm" (24-hour format)
 }
+
+export interface IScheduleFilterRequest {
+  startDate?: string | undefined;
+  endDate?: string | undefined;
+}

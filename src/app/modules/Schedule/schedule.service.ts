@@ -3,7 +3,7 @@ import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../Error/apiError";
 import { Prisma, Schedule } from "@prisma/client";
-import { ISchedulePayload } from "./schedule.interface";
+import { IScheduleFilterRequest, ISchedulePayload } from "./schedule.interface";
 import { IPaginationOptions } from "../../../Interface/common";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 
@@ -76,7 +76,7 @@ const createSchedule = async (
 
 // get all schedule
 const getAllFromDB = async (
-  params: any,
+  params: IScheduleFilterRequest,
   options: IPaginationOptions,
   doctorEmail: string
 ): Promise<Schedule[]> => {
