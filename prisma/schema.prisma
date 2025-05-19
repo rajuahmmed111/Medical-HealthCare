@@ -240,7 +240,7 @@ model Appointment {
   doctorId       String
   scheduleId     String            @unique
   videoCallingID String
-  status         AppointmentStatus @default(IN_PROGRESS)
+  status         AppointmentStatus @default(SCHEDULED)
   paymentStatus  PaymentStatus     @default(UNPAID)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
