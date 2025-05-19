@@ -41,25 +41,25 @@ const getMySchedule = async (
   params: any,
   options: IPaginationOptions
 ) => {
-  const { startDateTime, endDateTime, ...filterData } = params;
+  const { startDate, endDate, ...filterData } = params;
   const { limit, page, skip, sortBy, sortOrder } =
     calculatedPagination(options);
 
   const filters: Prisma.DoctorScheduleWhereInput[] = [];
 
   // filter on date
-  if (startDateTime && endDateTime) {
+  if (startDate && endDate) {
     filters.push({
       schedule: {
         AND: [
           {
             startDateTime: {
-              gte: startDateTime,
+              gte: startDate,
             },
           },
           {
             endDateTime: {
-              lte: endDateTime,
+              lte: endDate,
             },
           },
         ],
@@ -87,9 +87,10 @@ const getMySchedule = async (
     where,
     skip,
     take: limit,
-    orderBy: {
-      scheduleId: "desc",
-    },
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {},
   });
 
   const total = await prisma.doctorSchedule.count({ where });
