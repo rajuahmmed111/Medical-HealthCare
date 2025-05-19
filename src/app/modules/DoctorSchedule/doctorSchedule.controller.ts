@@ -21,6 +21,20 @@ const createDoctorSchedule = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all doctor schedule
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, filterField);
+  const options = pick(req.query, paginationField);
+  const result = await DoctorScheduleService.getAllFromDB(filter, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Doctor Schedule retrieval successfully",
+    data: result,
+  });
+});
+
 // get my schedule
 const getMySchedule = catchAsync(async (req: Request, res: Response) => {
   const email = req.user.email;
@@ -56,6 +70,7 @@ const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
 
 export const DoctorScheduleController = {
   createDoctorSchedule,
+  getAllFromDB,
   getMySchedule,
   deleteSchedule,
 };
