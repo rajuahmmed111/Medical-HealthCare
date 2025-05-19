@@ -69,14 +69,24 @@ const getMySchedule = async (
 
   // Exact search filter
   if (Object.keys(filterData).length > 0) {
+    if (
+      typeof filterData.isBooked === "string" &&
+      filterData.isBooked === "true"
+    ) {
+      filterData.isBooked = true;
+    } else if (
+      typeof filterData.isBooked === "string" &&
+      filterData.isBooked === "false"
+    ) {
+      filterData.isBooked = false;
+    }
+
     filters.push({
-      schedule: {
-        AND: Object.keys(filterData).map((key) => ({
-          [key]: {
-            equals: filterData[key],
-          },
-        })),
-      },
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
     });
   }
 
