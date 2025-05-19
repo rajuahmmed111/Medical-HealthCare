@@ -6,7 +6,7 @@ import { ScheduleService } from "./schedule.service";
 
 // create schedule
 const createSchedule = catchAsync(async (req: Request, res: Response) => {
-    const data = req.body;
+  const data = req.body;
   const result = await ScheduleService.createSchedule(data);
 
   sendResponse(res, {
@@ -17,6 +17,19 @@ const createSchedule = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get all schedule
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const result = await ScheduleService.getAllFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Schedule retrieved successfully",
+    data: result,
+  });
+});
+
 export const ScheduleController = {
   createSchedule,
+  getAllFromDB,
 };

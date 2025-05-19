@@ -70,6 +70,13 @@ const createSchedule = async (payload: ISchedulePayload): Promise<Schedule[]> =>
   return schedules;
 };
 
+// get all schedule
+const getAllFromDB = async (): Promise<Schedule[]> => {
+  const result = await prisma.schedule.findMany();
+  return result;
+};
+
 export const ScheduleService = {
   createSchedule,
+  getAllFromDB,
 };

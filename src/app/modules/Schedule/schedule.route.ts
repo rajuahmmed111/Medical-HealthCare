@@ -1,14 +1,22 @@
 import express from "express";
-import validateRequest from "../../Middleware/validateRequest";
-import { uploadFile } from "../../../Helpers/fileUpload";
-import { parseBodyData } from "../../Middleware/parseBodyData";
 import auth from "../../Middleware/auth";
 import { UserRole } from "@prisma/client";
 import { ScheduleController } from "./schedule.controller";
 
 const router = express.Router();
 
+// get all schedule
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
+  ScheduleController.getAllFromDB
+);
+
 // create schedule
-router.post("/", auth(UserRole.ADMIN, UserRole.SUPER_ADMIN), ScheduleController.createSchedule);
+router.post(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  ScheduleController.createSchedule
+);
 
 export const scheduleRoute = router;
