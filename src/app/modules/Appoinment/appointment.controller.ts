@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 import catchAsync from "../../../Utils/catchAsync";
 import sendResponse from "../../../Utils/sendResponse";
 import { AppointmentService } from "./appointment.service";
+import { pick } from "../../../shared/pick";
+import { paginationField } from "../../../Interface/common";
+import { filterField } from "./appointment.constant";
 
 const createAppointment = catchAsync(async (req: Request, res: Response) => {
   const patientEmail = req.user?.email;
@@ -20,7 +23,9 @@ const createAppointment = catchAsync(async (req: Request, res: Response) => {
 // get my appointments
 const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
   const patientEmail = req.user?.email;
-  const result = await AppointmentService.getMyAppointments(patientEmail);
+  const filter = pick(req.query, filterField);
+  const options = pick(req.query, paginationField);
+  const result = await AppointmentService.getMyAppointments(patientEmail, filter, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

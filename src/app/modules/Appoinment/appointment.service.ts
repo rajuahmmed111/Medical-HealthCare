@@ -2,6 +2,9 @@ import httpStatus from "http-status";
 import ApiError from "../../../Error/apiError";
 import prisma from "../../../shared/prisma";
 import { v4 as uuidv4 } from "uuid";
+import { IPaginationOptions } from "../../../Interface/common";
+import { calculatedPagination } from "../../../Helpers/calculatePagination";
+import { Prisma } from "@prisma/client";
 
 const createAppointment = async (patientEmail: string, payload: any) => {
   const { doctorId, scheduleId } = payload;
@@ -76,9 +79,8 @@ const createAppointment = async (patientEmail: string, payload: any) => {
     // generate payment transaction id
     // ------> Medical-Health-Care ---> DateTime
     const today = new Date();
-  const transactionId = `Medical-Health-Care-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}-${today.getHours()}-${today.getMinutes()}-${today.getSeconds()}`;
+    const transactionId = `Medical-Health-Care-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}-${today.getHours()}-${today.getMinutes()}-${today.getSeconds()}`;
 
-    
     // create payment
     await prisma.payment.create({
       data: {
@@ -95,23 +97,61 @@ const createAppointment = async (patientEmail: string, payload: any) => {
 };
 
 // get my appointments
-const getMyAppointments = async (patientEmail: string) => {
+const getMyAppointments = async (
+  patientEmail: string,
+  params: any,
+  options: IPaginationOptions
+) => {
+  const { ...filterData } = params;
+  const { limit, page, skip } = calculatedPagination(options);
+
+  const filters: Prisma.AppointmentWhereInput[] = [];
+
+  if (Object.keys(filterData).length > 0) {
+    filters.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
+
+  const where: Prisma.AppointmentWhereInput =
+    filters.length > 0
+      ? {
+          AND: filters,
+        }
+      : {};
+
   const result = await prisma.appointment.findMany({
-    where: {
-      patient: {
-        email: patientEmail,
-      },
-    },
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
+
     include: {
       patient: true,
       doctor: true,
       schedule: true,
     },
   });
-  return result;
-}
+
+  const total = await prisma.appointment.count({ where });
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
 
 export const AppointmentService = {
   createAppointment,
-  getMyAppointments
+  getMyAppointments,
 };
