@@ -41,7 +41,7 @@ const createAppointment = async (patientEmail: string, payload: any) => {
   }
 
   // generate videoCallingID
-  const videoCallingID = uuidv4();
+  const videoCallingID: string = uuidv4();
 
   const result = await prisma.$transaction(async (tx) => {
     // create appointment
