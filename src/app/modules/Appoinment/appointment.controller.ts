@@ -7,6 +7,7 @@ import { pick } from "../../../shared/pick";
 import { paginationField } from "../../../Interface/common";
 import { filterField } from "./appointment.constant";
 
+// create appointment
 const createAppointment = catchAsync(async (req: Request, res: Response) => {
   const patientEmail = req.user?.email;
   const data = req.body;
@@ -25,7 +26,11 @@ const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await AppointmentService.getMyAppointments(user, filter, options);
+  const result = await AppointmentService.getMyAppointments(
+    user,
+    filter,
+    options
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -35,4 +40,22 @@ const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AppointmentController = { createAppointment, getMyAppointments };
+// get all appointments
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, filterField);
+  const options = pick(req.query, paginationField);
+  const result = await AppointmentService.getAllFromDB(filter, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Appointments retrieved successfully",
+    data: result,
+  });
+});
+
+export const AppointmentController = {
+  createAppointment,
+  getMyAppointments,
+  getAllFromDB,
+};

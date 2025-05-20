@@ -7,6 +7,7 @@ import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { Prisma, UserRole } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 
+// create appointment
 const createAppointment = async (patientEmail: string, payload: any) => {
   const { doctorId, scheduleId } = payload;
 
@@ -153,7 +154,76 @@ const getMyAppointments = async (
     include:
       user?.role === UserRole.PATIENT
         ? { doctor: true, schedule: true }
-        : { patient: { include: { medicalReport: true, patientHealthData: true } }, schedule: true }
+        : {
+            patient: {
+              include: { medicalReport: true, patientHealthData: true },
+            },
+            schedule: true,
+          },
+  });
+
+  const total = await prisma.appointment.count({ where });
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+// get all appointments
+const getAllFromDB = async (params: any, options: IPaginationOptions) => {
+  const { patientEmail, doctorEmail, ...filterData } = params;
+  const { limit, page, skip } = calculatedPagination(options);
+
+  const filters: Prisma.AppointmentWhereInput[] = [];
+
+  if (patientEmail) {
+    filters.push({
+      patient: {
+        email: patientEmail,
+      },
+    });
+  }
+  if (doctorEmail) {
+    filters.push({
+      doctor: {
+        email: doctorEmail,
+      },
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    filters.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
+
+  const where: Prisma.AppointmentWhereInput =
+    filters.length > 0
+      ? {
+          AND: filters,
+        }
+      : {};
+
+  const result = await prisma.appointment.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : { createdAt: "desc" },
+    include: {
+      patient: true,
+      doctor: true,
+    },
   });
 
   const total = await prisma.appointment.count({ where });
@@ -170,4 +240,5 @@ const getMyAppointments = async (
 export const AppointmentService = {
   createAppointment,
   getMyAppointments,
+  getAllFromDB,
 };

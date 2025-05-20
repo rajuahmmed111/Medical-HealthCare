@@ -1,1 +1,1 @@
-export const filterField: string[] = ["status", "paymentStatus"];
+export const filterField: string[] = ["status", "paymentStatus", "patientEmail", "doctorEmail"];

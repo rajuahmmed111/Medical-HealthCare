@@ -7,6 +7,13 @@ import { AppointmentValidation } from "./appointment.validation";
 
 const router = express.Router();
 
+// get all appointments
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  AppointmentController.getAllFromDB
+);
+
 // get my appointment
 router.get(
   "/my",
