@@ -22,10 +22,10 @@ const createAppointment = catchAsync(async (req: Request, res: Response) => {
 
 // get my appointments
 const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
-  const patientEmail = req.user?.email;
+  const user = req.user;
   const filter = pick(req.query, filterField);
   const options = pick(req.query, paginationField);
-  const result = await AppointmentService.getMyAppointments(patientEmail, filter, options);
+  const result = await AppointmentService.getMyAppointments(user, filter, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

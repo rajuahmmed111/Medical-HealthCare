@@ -4,7 +4,7 @@ import prisma from "../../../shared/prisma";
 import { v4 as uuidv4 } from "uuid";
 import { IPaginationOptions } from "../../../Interface/common";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
-import { Prisma } from "@prisma/client";
+import { Prisma, UserRole } from "@prisma/client";
 
 const createAppointment = async (patientEmail: string, payload: any) => {
   const { doctorId, scheduleId } = payload;
@@ -98,7 +98,7 @@ const createAppointment = async (patientEmail: string, payload: any) => {
 
 // get my appointments
 const getMyAppointments = async (
-  patientEmail: string,
+  user: any,
   params: any,
   options: IPaginationOptions
 ) => {
@@ -106,6 +106,21 @@ const getMyAppointments = async (
   const { limit, page, skip } = calculatedPagination(options);
 
   const filters: Prisma.AppointmentWhereInput[] = [];
+
+  // exact specific user email filter
+  if (user?.role === UserRole.PATIENT) {
+    filters.push({
+      patient: {
+        email: user?.email,
+      },
+    });
+  } else {
+    filters.push({
+      doctor: {
+        email: user?.email,
+      },
+    });
+  }
 
   if (Object.keys(filterData).length > 0) {
     filters.push({
