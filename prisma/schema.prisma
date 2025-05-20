@@ -262,23 +262,6 @@ model Appointment {
   @@map("appointments")
 }
 
-model Prescription {
-  id            String    @id @default(uuid())
-  patientId     String
-  doctorId      String
-  appointmentId String    @unique
-  instructions  String
-  followUpDate  DateTime?
-  createAt      DateTime  @default(now())
-  updateAt      DateTime  @updatedAt
-
-  // Relations (assuming these referenced models exist)
-  patient     Patient     @relation(fields: [patientId], references: [id])
-  doctor      Doctor      @relation(fields: [doctorId], references: [id])
-  appointment Appointment @relation(fields: [appointmentId], references: [id])
-  userId      String?
-}
-
 model Payment {
   id                 String        @id @default(uuid())
   appointmentId      String        @unique
@@ -295,6 +278,24 @@ model Payment {
   @@map("payments")
 }
 
+model Prescription {
+  id            String    @id @default(uuid())
+  patientId     String
+  doctorId      String
+  appointmentId String    @unique
+  instructions  String
+  followUpDate  DateTime?
+  createAt      DateTime  @default(now())
+  updateAt      DateTime  @updatedAt
+
+  // Relations 
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+
+  @@map("prescriptions")
+}
+
 model Review {
   id            String   @id @default(uuid())
   patientId     String
@@ -309,5 +310,6 @@ model Review {
   patient     Patient     @relation(fields: [patientId], references: [id])
   doctor      Doctor      @relation(fields: [doctorId], references: [id])
   appointment Appointment @relation(fields: [appointmentId], references: [id])
-  userId      String?
+
+  @@map("reviews")
 }
