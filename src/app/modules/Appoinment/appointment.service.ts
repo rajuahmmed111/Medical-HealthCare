@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { IPaginationOptions } from "../../../Interface/common";
 import { calculatedPagination } from "../../../Helpers/calculatePagination";
 import { Prisma, UserRole } from "@prisma/client";
+import { JwtPayload } from "jsonwebtoken";
 
 const createAppointment = async (patientEmail: string, payload: any) => {
   const { doctorId, scheduleId } = payload;
@@ -98,10 +99,11 @@ const createAppointment = async (patientEmail: string, payload: any) => {
 
 // get my appointments
 const getMyAppointments = async (
-  user: any,
+  user: JwtPayload,
   params: any,
   options: IPaginationOptions
 ) => {
+  console.log(user);
   const { ...filterData } = params;
   const { limit, page, skip } = calculatedPagination(options);
 
