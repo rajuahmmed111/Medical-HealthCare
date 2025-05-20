@@ -17,4 +17,17 @@ const createAppointment = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const AppointmentController = { createAppointment };
+// get my appointments
+const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
+  const patientEmail = req.user?.email;
+  const result = await AppointmentService.getMyAppointments(patientEmail);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Appointments retrieved successfully",
+    data: result,
+  });
+});
+
+export const AppointmentController = { createAppointment, getMyAppointments };

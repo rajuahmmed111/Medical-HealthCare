@@ -94,6 +94,24 @@ const createAppointment = async (patientEmail: string, payload: any) => {
   return result;
 };
 
+// get my appointments
+const getMyAppointments = async (patientEmail: string) => {
+  const result = await prisma.appointment.findMany({
+    where: {
+      patient: {
+        email: patientEmail,
+      },
+    },
+    include: {
+      patient: true,
+      doctor: true,
+      schedule: true,
+    },
+  });
+  return result;
+}
+
 export const AppointmentService = {
   createAppointment,
+  getMyAppointments
 };
