@@ -112,6 +112,8 @@ model Patient {
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
   appointment       Appointment[]
+  prescription      Prescription[]
+  review            Review[]
 
   @@map("patients")
 }
@@ -178,6 +180,8 @@ model Doctor {
   doctorSpecialties DoctorSpecialties[]
   doctorSchedule    DoctorSchedule[]
   appointment       Appointment[]
+  review            Review[]
+  prescription      Prescription[]
 
   @@map("doctors")
 }
@@ -252,8 +256,27 @@ model Appointment {
 
   doctorSchedule DoctorSchedule?
   payment        Payment?
+  review         Review?
+  prescription   Prescription?
 
   @@map("appointments")
+}
+
+model Prescription {
+  id            String    @id @default(uuid())
+  patientId     String
+  doctorId      String
+  appointmentId String    @unique
+  instructions  String
+  followUpDate  DateTime?
+  createAt      DateTime  @default(now())
+  updateAt      DateTime  @updatedAt
+
+  // Relations (assuming these referenced models exist)
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+  userId      String?
 }
 
 model Payment {
@@ -270,4 +293,21 @@ model Payment {
   appointment Appointment @relation(fields: [appointmentId], references: [id])
 
   @@map("payments")
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  patientId     String
+  doctorId      String
+  appointmentId String   @unique
+  rating        Float
+  comment       String
+  createAt      DateTime @default(now())
+  updateAt      DateTime @updatedAt
+
+  // Relations
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  doctor      Doctor      @relation(fields: [doctorId], references: [id])
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+  userId      String?
 }
