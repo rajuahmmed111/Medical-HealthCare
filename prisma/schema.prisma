@@ -261,7 +261,7 @@ model Payment {
   appointmentId      String        @unique
   amount             Float
   transactionId      String
-  status             PaymentStatus
+  status             PaymentStatus @default(UNPAID)
   paymentGatewayData Json?
   createAt           DateTime      @default(now())
   updateAt           DateTime      @updatedAt

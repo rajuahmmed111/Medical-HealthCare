@@ -73,6 +73,21 @@ const createAppointment = async (patientEmail: string, payload: any) => {
       },
     });
 
+    // generate payment transaction id
+    // ------> Medical-Health-Care ---> DateTime
+    const today = new Date();
+    const transactionId = `Medical-Health-Care-${today.getFullYear()}-${today.getMonth()}-${today.getDate()}-${today.getHours()}`;
+
+    
+    // create payment
+    await prisma.payment.create({
+      data: {
+        appointmentId: appointmentData.id,
+        amount: doctorData.appointmentFee,
+        transactionId,
+      },
+    });
+
     return appointmentData;
   });
 
