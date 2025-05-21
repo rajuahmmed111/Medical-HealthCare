@@ -22,7 +22,7 @@ const createAppointment = async (patientEmail: string, payload: any) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Patient not found");
   }
 
-  // validation doctor
+  // validate doctor
   const doctorData = await prisma.doctor.findUnique({
     where: {
       id: doctorId,
