@@ -21,7 +21,7 @@ router.get(
   AppointmentController.getMyAppointments
 );
 
-// create appointment
+// create appointments
 router.post(
   "/",
   auth(UserRole.PATIENT),
