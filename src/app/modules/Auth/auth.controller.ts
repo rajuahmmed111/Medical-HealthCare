@@ -1,4 +1,4 @@
-import catchAsync from "../../../Utils/catchAsync";
+   import catchAsync from "../../../Utils/catchAsync";
 import sendResponse from "../../../Utils/sendResponse";
 import { AuthService } from "./auth.service";
 
