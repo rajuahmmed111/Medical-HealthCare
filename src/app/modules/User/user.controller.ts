@@ -71,7 +71,7 @@ const updateProfileStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// get my profile
+// get my-profile
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.user;
   const result = await userService.getMyProfile(id);
