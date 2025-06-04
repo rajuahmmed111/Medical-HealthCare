@@ -1,4 +1,4 @@
-// filter request
+// filter requests
 export type IUserFilterRequest = {
   searchTerm?: string | undefined;
   email?: string | undefined;
